@@ -4,6 +4,7 @@ import PIL
 import minepi
 import numpy as np
 import asyncio
+import backend
 print("--- ENVIRONMENT CHECK ---")
 print(f"✅ Torch version: {torch.__version__}")
 print(f"✅ Diffusers version: {diffusers.__version__}")
@@ -62,12 +63,12 @@ def generate_skin(prompt):
 
     image = pipe(prompt=prompt, width=768, height=768).images[0]
 
-    image.save("static/output/skin_full.png")
+    image.save(backend.get_output("full"))
 
     minecraft_skin = extract_minecraft_skin(image)
 
     minecraft_skin = restore_skin_alphachannels(minecraft_skin)
-    minecraft_skin.save("static/output/skin.png")
+    minecraft_skin.save(backend.get_output())
 
 async def render_skin(texture):
     s = minepi.Skin(texture)
@@ -76,8 +77,8 @@ async def render_skin(texture):
 
 if __name__ == "__main__":
     generate_skin("A purple smiling dinosaur")
-    image = Image.open("static/output/skin_full.png")
+    image = Image.open(backend.get_output("full"))
     minecraft_skin = extract_minecraft_skin(image)
     minecraft_skin = restore_skin_alphachannels(minecraft_skin)
-    minecraft_skin.save("static/output/skin.png")
+    minecraft_skin.save(backend.get_output())
     asyncio.run(render_skin(minecraft_skin))

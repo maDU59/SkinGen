@@ -21,14 +21,29 @@
     <script>
         let skinViewer;
 
-        window.onload = function() {
+        window.onload = async function() {
             skinViewer = new skinview3d.SkinViewer({
                 canvas: document.getElementById("skin_container"),
                 width: 400,
                 height: 500,
-                skin: "/static/output/skin.png" // Remplacer par un placeholder
+                skin: `/static/placeholders/default_skin.png`
             });
             skinViewer.animation = new skinview3d.WalkingAnimation();
+
+            try {
+                const response = await fetch('/get-skin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+
+                if (data.status === "success" && data.skin) {
+                    skinViewer.loadSkin(data.skin);
+                }
+            } catch (error) {
+                console.error("Could not fetch skin, sticking with default:", error);
+            }
         };
 
         async function generateSkin() {

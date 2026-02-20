@@ -30,7 +30,7 @@ def generate():
 
 @app.route('/get-skin', methods=['POST'])
 def get_skin_serv():
-    skin = get_skin()
+    skin = get_skin(get_uuid())
     return jsonify({
         "status": skin[0],
         "skin": skin[1]

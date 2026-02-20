@@ -12,8 +12,9 @@
     <button onclick="generateSkin()">Generate</button>
 
     <div id="viewer-box">
-        <div id = "status" class = "loader"></div>
-        <canvas id="skin_container"></canvas>
+        <div class = "loader skin-loading"></div>
+        <div class = "dark-overlay skin-loading""></div>
+        <canvas id="skin-container"></canvas>
     </div>
 
     <a href = "/static/output/skin.png" download><button>Download</button></a>
@@ -23,7 +24,7 @@
 
         window.onload = async function() {
             skinViewer = new skinview3d.SkinViewer({
-                canvas: document.getElementById("skin_container"),
+                canvas: document.getElementById("skin-container"),
                 width: 400,
                 height: 500,
                 skin: `/static/placeholders/default_skin.png`
@@ -48,9 +49,11 @@
 
         async function generateSkin() {
             const prompt = document.getElementById('prompt').value;
-            const status = document.getElementById('status');
+            const loading = document.getElementsByClassName('skin-loading');
             
-            status.style.display = "grid";
+            for(let i = 0; i < loading.length; i++) {
+                loading[i].style.display = "grid"
+            }
 
             const response = await fetch('/generate', {
                 method: 'POST',
@@ -62,7 +65,9 @@
             
             if (data.success) {
                 skinViewer.loadSkin(data.img_url); 
-                status.style.display = "none";
+                for(let i = 0; i < loading.length; i++) {
+                    loading[i].style.display = "none"
+                }
             }
         }
     </script>

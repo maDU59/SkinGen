@@ -1,8 +1,8 @@
 import os
 
-def get_skin(uuid = None, additional = ""):
+def get_skin(uuid = None, additional = "", hasToExist = True):
     skin = get_output(uuid, additional)
-    if os.path.exists(skin):
+    if os.path.exists(skin) or not hasToExist:
         return "success", skin
     else:
         return "404", get_default_output(additional)

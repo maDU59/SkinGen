@@ -7,12 +7,12 @@ import numpy as np
 import asyncio
 
 # Load the model from Hugging Face
-# pipe = StableDiffusionXLPipeline.from_pretrained(
-#     "monadical-labs/minecraft-skin-generator-sdxl", 
-#     torch_dtype=torch.float16,
-#     cache_dir="E:/AI-models/Minecraft-Skins",
-# )
-# pipe.to("cuda")
+pipe = StableDiffusionXLPipeline.from_pretrained(
+    "monadical-labs/minecraft-skin-generator-sdxl", 
+    torch_dtype=torch.float16,
+    cache_dir="E:/AI-models/Minecraft-Skins",
+)
+pipe.to("cuda")
 
 print("Model loaded!")
 
@@ -58,12 +58,12 @@ def generate_skin(prompt, uuid = None):
 
     image = pipe(prompt=prompt, width=768, height=768).images[0]
 
-    image.save(get_output("full"))
+    image.save(get_output(uuid,"full"))
 
     minecraft_skin = extract_minecraft_skin(image)
 
     minecraft_skin = restore_skin_alphachannels(minecraft_skin)
-    minecraft_skin.save(get_skin(uuid)[1])
+    minecraft_skin.save(get_output(uuid))
 
 async def render_skin(texture):
     s = minepi.Skin(texture)

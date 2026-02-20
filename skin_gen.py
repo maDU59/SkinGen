@@ -26,16 +26,14 @@ print("Model loaded!")
 
 SCALE = 12
 MASK_IMAGE = "img/mask2.png"
-THRESHOLD = 30
+THRESHOLD = 35
 
 def extract_minecraft_skin(generated_image):
-    # Extract the skin portion from the top half of the image.
+    """
+    Scale the texture
+    """
     width, height = generated_image.size
-    generated_skin = generated_image.crop((0, 0, width, height/2))
-    
-    # Scale the skin down to the expected size of 64x32 pixels.
-    width, height = generated_skin.size
-    scaled_skin = generated_skin.resize((int(width / SCALE), int(height / SCALE)),
+    scaled_skin = generated_image.resize((int(width / SCALE), int(height / SCALE)),
                                         resample=Image.Resampling.NEAREST) 
     
     return scaled_skin

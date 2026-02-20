@@ -61,7 +61,6 @@
             const data = await response.json();
             
             if (data.success) {
-                // UPDATE THE 3D MODEL WITHOUT RELOADING
                 skinViewer.loadSkin(data.img_url); 
                 status.style.display = "none";
             }

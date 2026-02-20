@@ -1,0 +1,1 @@
+A website that generates Minecraft skins through AI

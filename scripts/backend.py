@@ -7,7 +7,7 @@ from datetime import timedelta
 
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='../static')
 app.secret_key = os.getenv("SESSION_KEY")
 
 @app.before_request

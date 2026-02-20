@@ -1,0 +1,16 @@
+import os
+
+def get_skin(uuid = None, additional = ""):
+    skin = get_output(uuid, additional)
+    if os.path.exists(skin):
+        return "success", skin
+    else:
+        return "404", get_default_output(additional)
+
+def get_output(uuid = None, additional = ""):
+    if additional != "": additional = "_" + additional
+    return f"static/output/skin_{uuid}{additional}.png"
+
+def get_default_output(additional = ""):
+    if additional != "": additional = "_" + additional
+    return f"static/placeholders/default_skin{additional}.png"

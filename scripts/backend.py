@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template, url_for, jsonify, session
+from utils.skin_utils import get_output, get_skin
 import skin_gen
 import os
 import uuid
@@ -7,7 +8,7 @@ from datetime import timedelta
 
 load_dotenv()
 
-app = Flask(__name__, static_folder='../static')
+app = Flask(__name__)
 app.secret_key = os.getenv("SESSION_KEY")
 
 @app.before_request
@@ -23,32 +24,19 @@ def index():
 def generate():
     prompt = request.json.get('prompt')
     
-    skin_gen.generate_skin(prompt)
+    skin_gen.generate_skin(prompt, get_uuid())
     
-    return jsonify({"success": True, "img_url": get_output()})
+    return jsonify({"success": True, "img_url": get_output(get_uuid())})
 
 @app.route('/get-skin', methods=['POST'])
-def return_skin():
-    skin = get_output()
-    if os.path.exists(skin):
-        return jsonify({
-            "status": "success",
-            "skin": skin
-        })
-    else:
-        return jsonify({
-            "status": "404",
-            "skin": skin
-        })
+def get_skin_serv():
+    skin = get_skin()
+    return jsonify({
+        "status": skin[0],
+        "skin": skin[1]
+    })
 
 def get_uuid():
     if "uuid" not in session:
         session["uuid"] = str(uuid.uuid4())
     return session["uuid"]
-
-def get_output(additional = ""):
-    if additional != "": additional = "_" + additional
-    return f"static/output/skin_{get_uuid()}{additional}.png"
-
-if __name__ == '__main__':
-    app.run(debug=True, use_reloader=False)

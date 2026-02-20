@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minecraft Skin AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.js"></script>
+    <link rel="stylesheet" href="static/style/index.css" >
+</head>
+<body>
+    <h1>AI Skin Generator</h1>
+    
+    <input type="text" id="prompt" placeholder="Describe your skin...">
+    <button onclick="generateSkin()">Generate</button>
+
+    <div id="viewer-box">
+        <div id = "status" class = "loader"></div>
+        <canvas id="skin_container"></canvas>
+    </div>
+
+    <a href = "/static/output/skin.png" download><button>Download</button></a>
+
+    <script>
+        let skinViewer;
+
+        window.onload = function() {
+            skinViewer = new skinview3d.SkinViewer({
+                canvas: document.getElementById("skin_container"),
+                width: 400,
+                height: 500,
+                skin: "/static/output/skin.png" // Remplacer par un placeholder
+            });
+            skinViewer.animation = new skinview3d.WalkingAnimation();
+        };
+
+        async function generateSkin() {
+            const prompt = document.getElementById('prompt').value;
+            const status = document.getElementById('status');
+            
+            status.style.display = "grid";
+
+            const response = await fetch('/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ prompt: prompt })
+            });
+
+            const data = await response.json();
+            
+            if (data.success) {
+                // UPDATE THE 3D MODEL WITHOUT RELOADING
+                skinViewer.loadSkin(data.img_url); 
+                status.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>

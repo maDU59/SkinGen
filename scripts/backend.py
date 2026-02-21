@@ -20,6 +20,14 @@ def make_session_permanent():
 def index():
     return render_template('index.html')
 
+@app.route('/search', methods=['GET'])
+def search_no_arg():
+    return render_template('search.html', username = "a")
+
+@app.route('/search/<username>', methods=['GET'])
+def search(username):
+    return render_template('search.html', username = username)
+
 @app.route('/generate', methods=['POST'])
 def generate():
     prompt = request.json.get('prompt')

@@ -7,6 +7,7 @@ import queue
 import os
 import uuid
 import threading
+import time
 
 load_dotenv()
 
@@ -50,7 +51,8 @@ def generate():
     skin_queue.put((prompt, uuid))
 
     results[uuid] = {"status": "queued",
-        "result": "None"}
+        "result": "None",
+        "time": time.time()}
 
     return jsonify({
         "status": "queued",
@@ -75,6 +77,10 @@ def is_in_queuue():
 
 @app.route('/result/<ticket_id>')
 def get_result(ticket_id):
+
+    if ticket_id != session.get("uuid"):
+        return jsonify({"status": "error", "result": "Unauthorized"}), 403
+
     data = results.get(ticket_id)
     
     if not data:
@@ -109,8 +115,13 @@ def worker():
     while True:
         # This blocks until an item is available
         prompt, uuid = skin_queue.get()
+
+        if uuid not in results:
+            skin_queue.task_done()
+            continue
         
         results[uuid]["status"] = "processing"
+        results[uuid]["time"] = time.time()
         
         try:
             print(f"Processing: {uuid}")
@@ -118,14 +129,32 @@ def worker():
             
             results[uuid]["result"] = get_output_local(uuid)
             results[uuid]["status"] = "completed"
+            results[uuid]["time"] = time.time()
             print(f"Finished processing: {uuid}")
         except Exception as e:
             results[uuid]["status"] = "failed"
+            results[uuid]["time"] = time.time()
         
         skin_queue.task_done()
 
 worker_thread = threading.Thread(target=worker, daemon=True)
 worker_thread.start()
+
+def cleaner():
+    """
+    Cleans up abandoned or old results to prevent memory leaks.
+    """
+    while True:
+        time.sleep(300)
+        now = time.time()
+        for uuid in list(results.keys()):
+            if now - results[uuid].get("time", 0) > 1200 and results[uuid].get("status", "queued") != "queued": #20 minutes
+                del results[uuid]
+                print(f"Cleaned up expired session {uuid}")
+
+# Start the janitor thread alongside your worker
+janitor_thread = threading.Thread(target=cleaner, daemon=True)
+janitor_thread.start()
 
 if __name__ == "__main__":
     #host 0.0.0.0 to access it on other devices on the same network, not suited for production

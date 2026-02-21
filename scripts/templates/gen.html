@@ -41,8 +41,8 @@
             const queue_response = await fetch('/check-queue');
             const queue_data = await queue_response.json();
             if (queue_data.status){
-                waitForResult();
                 ticketId = queue_data.uuid
+                waitForResult();
             }
             else{
                 setLoading("none")

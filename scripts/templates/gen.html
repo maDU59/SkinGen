@@ -26,6 +26,8 @@
 
     <script>
         let skinViewer;
+        var interval;
+        var ticketId;
 
         window.onload = async function() {
             skinViewer = new skinview3d.SkinViewer({
@@ -36,7 +38,15 @@
             });
             skinViewer.animation = new skinview3d.WalkingAnimation();
 
-            setLoading("none")
+            const queue_response = await fetch('/check-queue');
+            const queue_data = await queue_response.json();
+            if (queue_data.status){
+                waitForResult();
+                ticketId = queue_data.uuid
+            }
+            else{
+                setLoading("none")
+            }
 
             try {
                 const response = await fetch('/get-skin', {
@@ -62,8 +72,6 @@
             const loading = document.getElementsByClassName('skin-loading');
 
             if (!getLoading()){
-                setLoading("grid");
-
                 const response = await fetch('/generate', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -72,9 +80,9 @@
 
                 const data = await response.json();
                 
-                if (data.success) {
-                    setSkin(data.img_url); 
-                    setLoading("none");
+                if (data.status === "queued") {
+                    ticketId = data.result
+                    waitForResult();
                 }
                 else{
                     // TO-DO: Add an error display
@@ -100,6 +108,32 @@
         function getLoading() {
             const loading = document.getElementsByClassName('skin-loading');
             return loading[0].style.display === "grid";
+        }
+
+        function waitForResult() {
+            setLoading("grid");
+            if (interval) clearInterval(interval);
+            interval = setInterval(async () => {
+                if (!ticketId || ticketId === "undefined") return;
+                const response = await fetch(`/result/${ticketId}`);
+                if (response.status === 200) {
+                    const data = await response.json();
+                    clearInterval(interval);
+                    setSkin(data.result);
+                    setLoading("none");
+                } else if (response.status === 404) {
+                    // TO-DO: Add an error display
+                    setLoading("none");
+                    clearInterval(interval);
+                }
+            }, 2000);
+        }
+
+        function stopInterval() {
+            if (interval) {
+            clearInterval(interval);
+            interval = null;
+            }
         }
 
     </script>

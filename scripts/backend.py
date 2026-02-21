@@ -16,9 +16,9 @@ def make_session_permanent():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(days=31)
 
-@app.route('/', methods=['GET'])
+@app.route('/gen', methods=['GET'])
 def index():
-    return render_template('index.html')
+    return render_template('gen.html')
 
 @app.route('/search', methods=['GET'])
 def search_no_arg():

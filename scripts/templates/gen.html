@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="/static/style/main.css" >
 </head>
 <body>
+
+    {% extends "common.html" %}
+
+    {% block content %}
+
     <h1>AI Skin Generator</h1>
     
     <input type="text" id="prompt" placeholder="Describe your skin...">
@@ -76,5 +81,7 @@
             document.getElementById("download").href = url;
         }
     </script>
+
+    {% endblock %}
 </body>
 </html>

@@ -6,6 +6,11 @@
     <link rel="stylesheet" href="/static/style/main.css" >
 </head>
 <body>
+
+    {% extends "common.html" %}
+
+    {% block content %}
+    
     <h1>Skin Search</h1>
     
     <input type="text" id="prompt" placeholder="Enter a username">
@@ -62,5 +67,7 @@
             });
         }
     </script>
+
+    {% endblock %}
 </body>
 </html>

@@ -64,7 +64,7 @@
             });
         }
 
-        async function setLoading(state) {
+        function setLoading(state) {
             const loading = document.getElementsByClassName('skin-loading');
             for(let i = 0; i < loading.length; i++) {
                 loading[i].style.display = state;

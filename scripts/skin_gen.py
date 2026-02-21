@@ -69,7 +69,15 @@ def generate_skin(prompt, uuid = None):
     minecraft_skin = extract_minecraft_skin(image)
 
     minecraft_skin = restore_skin_alphachannels(minecraft_skin)
-    minecraft_skin.save(get_output(uuid))
+
+    file_path = get_output(uuid)
+
+    directory = os.path.dirname(file_path)
+
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    minecraft_skin.save(file_path)
 
 async def render_skin(texture):
     s = minepi.Skin(texture)

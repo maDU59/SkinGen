@@ -14,7 +14,7 @@
     <h1>AI Skin Generator</h1>
     
     <input type="text" id="prompt" placeholder="Describe your skin...">
-    <button onclick="generateSkin()">Generate</button>
+    <button id = "gen" onclick="generateSkin()">Generate</button>
 
     <div id="viewer-box">
         <div class = "loader skin-loading"></div>
@@ -60,34 +60,48 @@
         async function generateSkin() {
             const prompt = document.getElementById('prompt').value;
             const loading = document.getElementsByClassName('skin-loading');
-            
-            setLoading("grid");
 
-            const response = await fetch('/generate', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ prompt: prompt })
-            });
+            if (!getLoading()){
+                setLoading("grid");
 
-            const data = await response.json();
-            
-            if (data.success) {
-                setSkin(data.img_url); 
-                setLoading("none");
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    setSkin(data.img_url); 
+                    setLoading("none");
+                }
+                else{
+                    // Add an error display
+                    setLoading("none");
+                }
             }
         }
 
-        async function setSkin(url) {
+        function setSkin(url) {
             skinViewer.loadSkin(url);
             document.getElementById("download").href = url;
         }
 
-        async function setLoading(state) {
+        function setLoading(state) {
             const loading = document.getElementsByClassName('skin-loading');
             for(let i = 0; i < loading.length; i++) {
                 loading[i].style.display = state;
             }
+            if (state == "grid") document.getElementById('gen').classList.add("gen-button-loading");
+            else document.getElementById('gen').classList.remove("gen-button-loading");
         }
+
+        function getLoading() {
+            const loading = document.getElementsByClassName('skin-loading');
+            return loading[0].style.display === "grid";
+        }
+
     </script>
 
     {% endblock %}

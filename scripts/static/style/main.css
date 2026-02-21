@@ -27,7 +27,7 @@ body, html{
 
 .skin-loading{
   position: absolute;
-  display: none;
+  display: grid;
 }
 
 .dark-overlay{

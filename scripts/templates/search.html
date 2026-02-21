@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Minecraft Skin AI</title>
+    <title>Minecraft Skin Search</title>
     <script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.js"></script>
     <link rel="stylesheet" href="/static/style/main.css" >
 </head>
@@ -36,23 +36,20 @@
             });
             setSkin(`https://mineskin.eu/skin/{{username}}`);
             skinViewer.animation = new skinview3d.WalkingAnimation();
+            setLoading("none");
         };
 
         async function searchSkin() {
             const prompt = document.getElementById('prompt').value;
             const loading = document.getElementsByClassName('skin-loading');
             
-            for(let i = 0; i < loading.length; i++) {
-                loading[i].style.display = "grid"
-            }
+            setLoading("grid");
             
             setSkin(`https://mineskin.eu/skin/${prompt}`);
 
             history.pushState("", "", "/search/" + prompt);
 
-            for(let i = 0; i < loading.length; i++) {
-                loading[i].style.display = "none"
-            }
+            setLoading("none");
         }
 
         async function setSkin(url) {
@@ -65,6 +62,13 @@
                 download.href = blobURL;
                 download.download = "skin.png"
             });
+        }
+
+        async function setLoading(state) {
+            const loading = document.getElementsByClassName('skin-loading');
+            for(let i = 0; i < loading.length; i++) {
+                loading[i].style.display = state;
+            }
         }
     </script>
 

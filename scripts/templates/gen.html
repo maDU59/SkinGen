@@ -36,6 +36,8 @@
             });
             skinViewer.animation = new skinview3d.WalkingAnimation();
 
+            setLoading("none")
+
             try {
                 const response = await fetch('/get-skin', {
                     method: 'POST',
@@ -47,6 +49,9 @@
                 if (data.status === "success" && data.skin) {
                     setSkin(data.skin);
                 }
+                else{
+                    console.log("No skin stored")
+                }
             } catch (error) {
                 console.error("Could not fetch skin, sticking with default:", error);
             }
@@ -56,9 +61,7 @@
             const prompt = document.getElementById('prompt').value;
             const loading = document.getElementsByClassName('skin-loading');
             
-            for(let i = 0; i < loading.length; i++) {
-                loading[i].style.display = "grid"
-            }
+            setLoading("grid");
 
             const response = await fetch('/generate', {
                 method: 'POST',
@@ -70,15 +73,20 @@
             
             if (data.success) {
                 setSkin(data.img_url); 
-                for(let i = 0; i < loading.length; i++) {
-                    loading[i].style.display = "none"
-                }
+                setLoading("none");
             }
         }
 
         async function setSkin(url) {
             skinViewer.loadSkin(url);
             document.getElementById("download").href = url;
+        }
+
+        async function setLoading(state) {
+            const loading = document.getElementsByClassName('skin-loading');
+            for(let i = 0; i < loading.length; i++) {
+                loading[i].style.display = state;
+            }
         }
     </script>
 

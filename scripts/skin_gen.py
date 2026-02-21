@@ -1,5 +1,6 @@
 from utils.skin_utils import get_output, get_skin
 from diffusers.pipelines.stable_diffusion_xl.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
+from utils.path_utils import MASK_FILE
 from PIL import Image
 import torch
 import minepi
@@ -9,7 +10,7 @@ import os
 
 CACHE_DIR = "E:/AI-models/Minecraft-Skins"
 SCALE = 12
-MASK_IMAGE = "masks/mask2.png"
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 THRESHOLD = 35
 
 if os.path.exists(CACHE_DIR):
@@ -53,7 +54,7 @@ def restore_skin_alphachannels(image):
     converted_image = Image.fromarray(image_data)
     converted_image = converted_image.convert("RGBA")
 
-    mask_image = Image.open(MASK_IMAGE).crop((0, 0, converted_image.width, converted_image.height))
+    mask_image = Image.open(MASK_FILE).crop((0, 0, converted_image.width, converted_image.height))
 
     bg = Image.new("RGBA", converted_image.size, (0, 0, 0, 0))
     

@@ -25,4 +25,5 @@ def get_default_output(additional = ""):
     return f"static/placeholders/default_skin_{additional}.png"
 
 if __name__ == "__main__":
-    app.run(debug=True, use_reloader=False)
+    #host 0.0.0.0 to access it on other devices on the same network, not suited for production
+    app.run(debug=True, use_reloader=False, host = "0.0.0.0")

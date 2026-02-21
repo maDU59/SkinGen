@@ -8,6 +8,12 @@
     color: white;
 }
 
+.header .header-logo{
+    padding-left: 10px;
+    height: 80%;
+    width: auto;
+}
+
 .header .home-button{
     display: flex;
     justify-content: flex-end;

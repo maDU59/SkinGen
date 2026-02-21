@@ -17,7 +17,7 @@
         <canvas id="skin-container"></canvas>
     </div>
 
-    <a id = "download" href = "https://mineskin.eu/skin/{{username}}" download><button>Download</button></a>
+    <a id = "download" href = "https://mineskin.eu/skin/{{username}}.png" download><button>Download</button></a>
 
     <script>
         let skinViewer;
@@ -29,6 +29,7 @@
                 height: 500,
                 skin: `https://mineskin.eu/skin/{{username}}`
             });
+            setSkin(`https://mineskin.eu/skin/{{username}}`);
             skinViewer.animation = new skinview3d.WalkingAnimation();
         };
 
@@ -42,6 +43,8 @@
             
             setSkin(`https://mineskin.eu/skin/${prompt}`);
 
+            history.pushState("", "", "/search/" + prompt);
+
             for(let i = 0; i < loading.length; i++) {
                 loading[i].style.display = "none"
             }
@@ -49,7 +52,14 @@
 
         async function setSkin(url) {
             skinViewer.loadSkin(url);
-            document.getElementById("download").href = url;
+            fetch(url)
+            .then(response => response.blob())
+            .then(blob => {
+                const blobURL = URL.createObjectURL(blob);
+                const download = document.getElementById("download");
+                download.href = blobURL;
+                download.download = "skin.png"
+            });
         }
     </script>
 </body>

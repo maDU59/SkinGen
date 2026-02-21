@@ -9,7 +9,7 @@ def get_skin(uuid = None, additional = "", hasToExist = True):
 
 def get_output(uuid = None, additional = ""):
     if additional != "": additional = "_" + additional
-    return f"static/output/skin_{uuid}{additional}.png"
+    return f"static/output/{uuid}/skin{additional}.png"
 
 def get_default_output(additional = ""):
     if additional != "": additional = "_" + additional

@@ -5,20 +5,25 @@ import torch
 import minepi
 import numpy as np
 import asyncio
+import os
 
-# Load the model from Hugging Face
-pipe = StableDiffusionXLPipeline.from_pretrained(
-    "monadical-labs/minecraft-skin-generator-sdxl", 
-    torch_dtype=torch.float16,
-    cache_dir="E:/AI-models/Minecraft-Skins",
-)
-pipe.to("cuda")
-
-print("Model loaded!")
-
+CACHE_DIR = "E:/AI-models/Minecraft-Skins"
 SCALE = 12
 MASK_IMAGE = "masks/mask2.png"
 THRESHOLD = 35
+
+if os.path.exists(CACHE_DIR):
+    # Load the model from Hugging Face
+    pipe = StableDiffusionXLPipeline.from_pretrained(
+        "monadical-labs/minecraft-skin-generator-sdxl", 
+        torch_dtype=torch.float16,
+        cache_dir=CACHE_DIR,
+    )
+    pipe.to("cuda")
+
+    print("Model loaded!")
+else:
+    print("Model not found")
 
 def extract_minecraft_skin(generated_image):
     """
@@ -58,7 +63,7 @@ def generate_skin(prompt, uuid = None):
 
     image = pipe(prompt=prompt, width=768, height=768).images[0]
 
-    image.save(get_output(uuid,"full"))
+    #image.save(get_output(uuid,"full"))
 
     minecraft_skin = extract_minecraft_skin(image)
 

@@ -18,7 +18,9 @@
 
     <div id="viewer-box">
         <div class = "loader skin-loading"></div>
-        <div class = "dark-overlay skin-loading""></div>
+        <div class = "dark-overlay skin-loading">
+            <p id = "loading-text" class="skin-loading" class = ""></p>
+        </div>
         <canvas id="skin-container"></canvas>
     </div>
 
@@ -116,23 +118,51 @@
             interval = setInterval(async () => {
                 if (!ticketId || ticketId === "undefined") return;
                 const response = await fetch(`/result/${ticketId}`);
+                const text = document.getElementById("loading-text")
                 if (response.status === 200) {
                     const data = await response.json();
                     clearInterval(interval);
                     setSkin(data.result);
                     setLoading("none");
                 } else if (response.status === 404) {
-                    // TO-DO: Add an error display
+                    setLoadingText(text, "failed")
+                    text.textContent = "There was an error processing your request, please try again"
                     setLoading("none");
                     clearInterval(interval);
+                } else{
+                    const data = await response.json();
+                    if (data.status === "processing"){
+                        setLoadingText(text, "processing")
+                        text.textContent = "Your request is being processed..."
+                    }
+                    else if (data.status === "queued"){
+                        setLoadingText(text, "queued")
+                        text.textContent = "You are ... in the queue..."
+                    }
                 }
             }, 2000);
         }
 
+        function setLoadingText(text, state){
+            let array = ["processing", "queued", "failed"]
+            state = "loading-" + state
+            array.forEach(elem => {
+                elem = "loading-" + elem
+                if (elem === state){
+                    text.classList.add(elem)
+                }
+                else{
+                    if (elem in text.classList){
+                        text.classList.remove(elem)
+                    }
+                }
+            })
+        }
+
         function stopInterval() {
             if (interval) {
-            clearInterval(interval);
-            interval = null;
+                clearInterval(interval);
+                interval = null;
             }
         }
 

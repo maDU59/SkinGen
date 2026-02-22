@@ -90,12 +90,13 @@ def get_result(ticket_id):
             }), 404
 
     if data["status"] == "completed":
-        final_data = results.pop(ticket_id) 
+        results.pop(ticket_id) 
         return jsonify({
             "status": "completed", 
-            "result": f"{final_data['result']}"
+            "result": f"{data['result']}"
         })
     elif data["status"] == "failed":
+        results.pop(ticket_id) 
         return jsonify({
             "status": "error", 
             "result": "Error while generating skin"
@@ -148,7 +149,7 @@ def cleaner():
         time.sleep(300)
         now = time.time()
         for uuid in list(results.keys()):
-            if now - results[uuid].get("time", 0) > 1200 and results[uuid].get("status", "queued") != "queued": #20 minutes
+            if now - results[uuid].get("time", 0) > 1200 and not results[uuid].get("status", "queued") in ["queued", "processing"]: #20 minutes
                 del results[uuid]
                 print(f"Cleaned up expired session {uuid}")
 

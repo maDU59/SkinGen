@@ -64,7 +64,7 @@ def generate_skin(prompt, uuid = None):
 
     image = pipe(prompt=prompt, width=768, height=768).images[0]
 
-    #image.save(get_output(uuid,"full"))
+    image.save(get_output(uuid,"full")) # Only for testing purposes
 
     minecraft_skin = extract_minecraft_skin(image)
 

@@ -76,6 +76,24 @@ body, html{
   color: #f1f1f1;
 }
 
+#loading-text{
+  top: 80%;
+  left: 50%;
+  transform:translate(-50%, -50%);
+}
+
+.loading-queued{
+  color: orange;
+}
+
+.loading-failed{
+  color: red;
+}
+
+.loading-processing{
+  color: orange;
+}
+
 @keyframes l12 { 
   100%{transform: rotate(.5turn)}
 }

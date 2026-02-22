@@ -113,33 +113,39 @@
         }
 
         function waitForResult() {
-            setLoading("grid");
+            const text = document.getElementById("loading-text")
             text.textContent = ""
+            setLoading("grid");
             if (interval) clearInterval(interval);
             interval = setInterval(async () => {
                 if (!ticketId || ticketId === "undefined") return;
-                const response = await fetch(`/result/${ticketId}`);
-                const text = document.getElementById("loading-text")
-                if (response.status === 200) {
-                    const data = await response.json();
-                    clearInterval(interval);
-                    setSkin(data.result);
-                    setLoading("none");
-                } else if (response.status === 404) {
+                try{
+                    const response = await fetch(`/result/${ticketId}`);
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        clearInterval(interval);
+                        setSkin(data.result);
+                        setLoading("none");
+                    } else if (response.status === 404) {
+                        setLoadingText(text, "failed")
+                        text.textContent = "There was an error processing your request, please try again"
+                        setLoading("none");
+                        clearInterval(interval);
+                    } else{
+                        const data = await response.json();
+                        if (data.status === "processing"){
+                            setLoadingText(text, "processing")
+                            text.textContent = "Your request is being processed..."
+                        }
+                        else if (data.status === "queued"){
+                            setLoadingText(text, "queued")
+                            text.textContent = `You are ${data.queue_pos} in the queue...`
+                        }
+                    }
+                }
+                catch (error){
                     setLoadingText(text, "failed")
                     text.textContent = "There was an error processing your request, please try again"
-                    setLoading("none");
-                    clearInterval(interval);
-                } else{
-                    const data = await response.json();
-                    if (data.status === "processing"){
-                        setLoadingText(text, "processing")
-                        text.textContent = "Your request is being processed..."
-                    }
-                    else if (data.status === "queued"){
-                        setLoadingText(text, "queued")
-                        text.textContent = `You are ${data.queue_pos} in the queue...`
-                    }
                 }
             }, 2000);
         }

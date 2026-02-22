@@ -114,6 +114,7 @@
 
         function waitForResult() {
             setLoading("grid");
+            text.textContent = ""
             if (interval) clearInterval(interval);
             interval = setInterval(async () => {
                 if (!ticketId || ticketId === "undefined") return;
@@ -137,7 +138,7 @@
                     }
                     else if (data.status === "queued"){
                         setLoadingText(text, "queued")
-                        text.textContent = "You are ... in the queue..."
+                        text.textContent = `You are ${data.queue_pos} in the queue...`
                     }
                 }
             }, 2000);

@@ -12,6 +12,8 @@ import time
 load_dotenv()
 
 skin_queue = queue.Queue()
+tickets_counter = 0
+finished_tickets_counter = 0
 results = {}
 app = Flask(__name__)
 app.secret_key = os.getenv("SESSION_KEY")
@@ -38,6 +40,7 @@ def search(username = "a"):
 
 @app.route('/generate', methods=['POST'])
 def generate():
+    global tickets_counter
     uuid = get_uuid()
     if uuid in results:
         print(uuid, " made a request while already in queue")
@@ -49,6 +52,7 @@ def generate():
     prompt = request.json.get('prompt')
 
     skin_queue.put((prompt, uuid))
+    tickets_counter += 1
 
     results[uuid] = {"status": "queued",
         "result": "None",
@@ -102,7 +106,7 @@ def get_result(ticket_id):
             "result": "Error while generating skin"
             }), 404
     
-    return jsonify(data), 202
+    return jsonify(data | {"queue_pos":tickets_counter - finished_tickets_counter - 1}), 202
 
 def get_uuid():
     if "uuid" not in session:
@@ -113,12 +117,14 @@ def worker():
     """
     Generate skins
     """
+    global finished_tickets_counter
     while True:
         # This blocks until an item is available
         prompt, uuid = skin_queue.get()
 
         if uuid not in results:
             skin_queue.task_done()
+            finished_tickets_counter += 1
             continue
         
         results[uuid]["status"] = "processing"
@@ -137,6 +143,7 @@ def worker():
             results[uuid]["time"] = time.time()
         
         skin_queue.task_done()
+        finished_tickets_counter += 1
 
 worker_thread = threading.Thread(target=worker, daemon=True)
 worker_thread.start()

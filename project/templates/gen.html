@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Minecraft Skin AI</title>
+    <script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.js"></script>
+    <link rel="stylesheet" href="/static/style/main.css" >
+</head>
+<body>
+
+    {% extends "common.html" %}
+
+    {% block content %}
+
+    <h1>AI Skin Generator</h1>
+    
+    <input type="text" id="prompt" placeholder="Describe your skin...">
+    <button id = "gen" onclick="generateSkin()">Generate</button>
+
+    <div id="viewer-box">
+        <div class = "loader skin-loading"></div>
+        <div class = "dark-overlay skin-loading">
+            <p id = "loading-text" class="skin-loading" class = ""></p>
+        </div>
+        <canvas id="skin-container"></canvas>
+    </div>
+
+    <a id = "download" href = "/static/placeholders/default_skin.png" download><button>Download</button></a>
+
+    <script>
+        let skinViewer;
+        var interval;
+        var ticketId;
+
+        window.onload = async function() {
+            skinViewer = new skinview3d.SkinViewer({
+                canvas: document.getElementById("skin-container"),
+                width: 400,
+                height: 500,
+                skin: `/static/placeholders/default_skin.png`
+            });
+            skinViewer.animation = new skinview3d.WalkingAnimation();
+
+            const queue_response = await fetch('/check-queue');
+            const queue_data = await queue_response.json();
+            if (queue_data.status){
+                ticketId = queue_data.uuid
+                waitForResult();
+            }
+            else{
+                setLoading("none")
+            }
+
+            try {
+                const response = await fetch('/get-skin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+
+                if (data.status === "success" && data.skin) {
+                    setSkin(data.skin);
+                }
+                else{
+                    console.log("No skin stored")
+                }
+            } catch (error) {
+                console.error("Could not fetch skin, sticking with default:", error);
+            }
+        };
+
+        async function generateSkin() {
+            const prompt = document.getElementById('prompt').value;
+            const loading = document.getElementsByClassName('skin-loading');
+
+            if (!getLoading()){
+                const response = await fetch('/generate', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === "queued") {
+                    ticketId = data.result
+                    waitForResult();
+                }
+                else{
+                    setLoadingText(text, "failed")
+                    text.textContent = "There was an error processing your request, please try again"
+                    setLoading("none");
+                }
+            }
+        }
+
+        function setSkin(url) {
+            skinViewer.loadSkin(url);
+            document.getElementById("download").href = url;
+        }
+
+        function setLoading(state) {
+            const loading = document.getElementsByClassName('skin-loading');
+            for(let i = 0; i < loading.length; i++) {
+                loading[i].style.display = state;
+            }
+            if (state == "grid") document.getElementById('gen').classList.add("gen-button-loading");
+            else document.getElementById('gen').classList.remove("gen-button-loading");
+        }
+
+        function getLoading() {
+            const loading = document.getElementsByClassName('skin-loading');
+            return loading[0].style.display === "grid";
+        }
+
+        function waitForResult() {
+            const text = document.getElementById("loading-text")
+            text.textContent = ""
+            setLoading("grid");
+            if (interval) clearInterval(interval);
+            interval = setInterval(async () => {
+                if (!ticketId || ticketId === "undefined") return;
+                try{
+                    const response = await fetch(`/result/${ticketId}`);
+                    if (response.status === 200) {
+                        const data = await response.json();
+                        clearInterval(interval);
+                        setSkin(data.result);
+                        setLoading("none");
+                    } else if (response.status === 404) {
+                        setLoadingText(text, "failed")
+                        text.textContent = "There was an error processing your request, please try again"
+                        setLoading("none");
+                        clearInterval(interval);
+                    } else{
+                        const data = await response.json();
+                        if (data.status === "processing"){
+                            setLoadingText(text, "processing")
+                            text.textContent = "Your request is being processed..."
+                        }
+                        else if (data.status === "queued"){
+                            setLoadingText(text, "queued")
+                            text.textContent = `You are ${data.queue_pos} in the queue...`
+                        }
+                    }
+                }
+                catch (error){
+                    setLoadingText(text, "failed")
+                    text.textContent = "There was an error processing your request, please try again"
+                }
+            }, 2000);
+        }
+
+        function setLoadingText(text, state){
+            let array = ["processing", "queued", "failed"]
+            state = "loading-" + state
+            array.forEach(elem => {
+                elem = "loading-" + elem
+                if (elem === state){
+                    text.classList.add(elem)
+                }
+                else{
+                    if (elem in text.classList){
+                        text.classList.remove(elem)
+                    }
+                }
+            })
+        }
+
+        function stopInterval() {
+            if (interval) {
+                clearInterval(interval);
+                interval = null;
+            }
+        }
+
+    </script>
+
+    {% endblock %}
+</body>
+</html>

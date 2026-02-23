@@ -1,6 +1,6 @@
-from utils.skin_utils import get_output, get_skin
+from project.utils.skin_utils import get_output, get_skin
 from diffusers.pipelines.stable_diffusion_xl.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
-from utils.path_utils import MASK_FILE
+from project.utils.path_utils import MASK_FILE
 from PIL import Image
 import torch
 import minepi

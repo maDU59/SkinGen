@@ -1,5 +1,5 @@
 import os
-from utils.path_utils import PLACEHOLDER_DIR, OUTPUT_DIR
+from project.utils.path_utils import PLACEHOLDER_DIR, OUTPUT_DIR
 
 def get_skin(uuid = None, additional = "", hasToExist = True):
     skin = get_output(uuid, additional)

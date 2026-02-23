@@ -1,44 +1,35 @@
-from flask import Flask, request, render_template, url_for, jsonify, session
-from utils.skin_utils import get_output_local, get_skin_local
-from dotenv import load_dotenv
-from datetime import timedelta
-import skin_gen
+from flask import request, render_template, jsonify, session, Blueprint
+from project.utils.skin_utils import get_output_local, get_skin_local
+from flask_login import login_required, current_user
+import project.skin_gen as skin_gen
 import queue
-import os
 import uuid
 import threading
 import time
 
-load_dotenv()
+main = Blueprint('main', __name__)
 
 skin_queue = queue.Queue()
 tickets_counter = 0
 finished_tickets_counter = 0
 results = {}
-app = Flask(__name__)
-app.secret_key = os.getenv("SESSION_KEY")
 
-@app.before_request
-def make_session_permanent():
-    session.permanent = True
-    app.permanent_session_lifetime = timedelta(days=31)
-
-@app.route('/home', methods=['GET'])
-@app.route('/', methods=['GET'])
+@main.route('/home', methods=['GET'])
+@main.route('/', methods=['GET'])
 def home():
     return render_template('home.html')
 
-@app.route('/gen', methods=['GET'])
+@main.route('/gen', methods=['GET'])
 def gen():
     return render_template('gen.html')
 
-@app.route('/search/', methods=['GET'])
-@app.route('/search', methods=['GET'])
-@app.route('/search/<username>', methods=['GET'])
+@main.route('/search/', methods=['GET'])
+@main.route('/search', methods=['GET'])
+@main.route('/search/<username>', methods=['GET'])
 def search(username = "a"):
     return render_template('search.html', username = username)
 
-@app.route('/generate', methods=['POST'])
+@main.route('/generate', methods=['POST'])
 def generate():
     global tickets_counter
     uuid = get_uuid()
@@ -63,7 +54,7 @@ def generate():
         "result": uuid
     }), 202
 
-@app.route('/get-skin', methods=['POST'])
+@main.route('/get-skin', methods=['POST'])
 def get_skin_serv():
     skin = get_skin_local(get_uuid())
     return jsonify({
@@ -71,7 +62,7 @@ def get_skin_serv():
         "skin": skin[1]
     })
 
-@app.route('/check-queue')
+@main.route('/check-queue')
 def is_in_queuue():
     uuid = get_uuid()
     return jsonify({
@@ -79,7 +70,12 @@ def is_in_queuue():
         "uuid": uuid
     })
 
-@app.route('/result/<ticket_id>')
+@main.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
+
+@main.route('/result/<ticket_id>')
 def get_result(ticket_id):
 
     if ticket_id != session.get("uuid"):
@@ -163,7 +159,3 @@ def cleaner():
 # Start the janitor thread alongside your worker
 janitor_thread = threading.Thread(target=cleaner, daemon=True)
 janitor_thread.start()
-
-if __name__ == "__main__":
-    #host 0.0.0.0 to access it on other devices on the same network, not suited for production
-    app.run(debug=True, use_reloader=False, host = "0.0.0.0")

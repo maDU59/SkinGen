@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>NeuroSkin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style/common.css" >
+</head>
+<body>
+<div class="header" id="myHeader">
+    <a href = "/" class = "full-button home-button">
+        <img class = "header-logo" src = "/static/images/logo.svg">
+        <h1>NeuroSkin</h1>
+    </a>
+    {% if not current_user.is_authenticated %}
+    <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button login-button" onclick="openModal()">
+        <h1>Log in</h1>
+    </button>
+    {% endif %}
+</div>
+<div id="loginModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" name="email" placeholder="Email address" required>
+            <input type="password" name="password" placeholder="Password" required>
+                <label class="checkbox" for="remember">
+                    Remember me
+                </label>
+                <input type="checkbox" name="remember" id="remember">
+            <button type="submit">Log In</button>
+            <p id="errorMessage" class="error-message" style="display:none;"></p>
+            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+        </form>
+    </div>
+</div>
+<script>
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault(); // Stop the page from reloading
+
+        const formData = new FormData(e.target);
+        
+        const response = await fetch('/login', {
+            method: 'POST',
+            body: formData // Flask will find this in request.form
+        });
+
+        const result = await response.json();
+
+        if (result.status === "Success") {
+            location.reload();
+        } else {
+            const errorMsg = document.getElementById('errorMessage');
+            errorMsg.textContent = "Invalid email or password.";
+            errorMsg.style.display = 'block';
+        }
+    });
+
+    function openModal() {
+        document.getElementById('loginModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('loginModal').style.display = 'none';
+    }
+</script>
+
+{% block content %}
+{% endblock %}
+</body>
+</html>

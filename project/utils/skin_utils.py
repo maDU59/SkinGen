@@ -33,4 +33,7 @@ def get_default_output_local(additional = ""):
     return f"static/placeholders/default_skin{additional}.png"
 
 def get_gallery_dir(uuid = None):
-    return GALLERY_DIR + f"/{uuid}/gallery/"
+    return GALLERY_DIR + f"/{uuid}/"
+
+def get_gallery_dir_local(id = None):
+    return f"static/saved-skins/{id}/"

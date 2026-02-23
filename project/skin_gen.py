@@ -1,8 +1,9 @@
-from project.utils.skin_utils import get_output, get_skin
+from project.utils.skin_utils import get_output, get_skin, get_gallery_dir
 from diffusers.pipelines.stable_diffusion_xl.pipeline_stable_diffusion_xl import StableDiffusionXLPipeline
 from project.utils.path_utils import MASK_FILE
 from PIL import Image
 import torch
+import time
 import minepi
 import numpy as np
 import asyncio
@@ -60,7 +61,7 @@ def restore_skin_alphachannels(image):
     
     return Image.composite(converted_image, bg, mask_image)
 
-def generate_skin(prompt, uuid = None):
+def generate_skin(prompt, uuid = None, id = None):
 
     image = pipe(prompt=prompt, width=768, height=768).images[0]
 
@@ -78,6 +79,15 @@ def generate_skin(prompt, uuid = None):
         os.makedirs(directory)
 
     minecraft_skin.save(file_path)
+
+    if id is not None:
+        directory = get_gallery_dir(id)
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        file_path = os.path.join(directory, f"{int(time.time())}_" + prompt + ".png")
+        minecraft_skin.save(file_path)
 
 async def render_skin(texture):
     s = minepi.Skin(texture)

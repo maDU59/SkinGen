@@ -30,13 +30,17 @@
                     const skinElement = document.createElement('div');
                     skinElement.classList.add('saved-skin');
                     skinElement.innerHTML = `
-                        <img src="${skin.url}" alt="Saved Skin" class="saved-skin-image">
-                        <p>${skin.name}</p>
+                        <img src="${skin}" alt="Saved Skin" class="saved-skin-image">
+                        <p>${skin.split('/').pop().split('.')[0].split('_')[1]}</p>
                     `;
                     profileInfoDiv.appendChild(skinElement);
                 });
             } else {
-                profileInfoDiv.innerHTML += '<p>You have no saved skins.</p>';
+                if (response.status === 200) {
+                    profileInfoDiv.innerHTML += '<p>You have no saved skins.</p>';
+                } else {
+                    profileInfoDiv.innerHTML += '<p>Error fetching saved skins.</p>';
+                }
             }
         }
     </script>

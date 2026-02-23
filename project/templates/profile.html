@@ -1,6 +1,12 @@
 {% extends "common.html" %}
 
 {% block content %}
-    <h3 class="title">Profile</h3>
-    {{ tokens_remaining }} tokens remaining.
+    <h1 class="title">Account settings</h1>
+    <div class="profile-info">
+        <p><strong>Email:</strong> {{ current_user.email }}</p>
+        <a href = "/logout" class="small-button red">Log out</a>
+    </div>
+    <div class="profile-info">
+        <p><strong>Tokens Remaining:</strong> {{ tokens_remaining }}</p>
+    </div>
 {% endblock %}

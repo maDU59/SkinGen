@@ -19,9 +19,13 @@
             <h1>NeuroSkin</h1>
         </a>
         {% if not current_user.is_authenticated %}
-        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button login-button" onclick="openModal('loginModal')">
+        <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button right" onclick="openModal('loginModal')">
             <h1>Log in</h1>
         </button>
+        {% else %}
+            <a href = "/profile" class = "full-button right">
+                <img class = "header-logo" src = "/static/images/account-logo.svg">
+            </a>
         {% endif %}
     </div>
     <div id="loginModal" class="modal-overlay">

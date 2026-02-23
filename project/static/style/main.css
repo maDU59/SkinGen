@@ -103,3 +103,36 @@ body {
 .gen-button-loading{
   background-color: red;
 }
+
+.profile-info{
+  display: flex;
+  background-color: #222;
+  margin: 20px auto;
+  padding: 30px;
+  border-radius: 10px;
+  text-align: left;
+  align-items: center
+}
+
+.profile-info p{
+  display: inline-block;
+}
+
+.small-button{
+  margin-left: auto;
+  display: inline-block;
+  background-color: transparent;
+  border: 0;
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
+.red{
+  background-color: red;
+}
+
+.red:hover{
+  background-color: rgb(204, 0, 0)
+}

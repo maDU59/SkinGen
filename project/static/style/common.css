@@ -4,7 +4,6 @@
 
 .header h1{
     margin: 0;
-    padding: 0 10px;
 }
 
 .header a{
@@ -13,7 +12,7 @@
 }
 
 .header .header-logo{
-    padding-left: 10px;
+    padding: 0px 10px;
     height: 80%;
     width: auto;
 }
@@ -25,15 +24,11 @@
     background-color: transparent;
     border: 0;
     height: 100%;
-}
-.header .home-button{
-    justify-content: flex-end;
     align-items: center;
+    justify-content: center;
 }
 
-.header .login-button{
-    justify-content: flex-end;
-    align-items: center;
+.header .right{
     margin-left: auto;
 }
 

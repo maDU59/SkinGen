@@ -11,18 +11,21 @@
 
     {% block content %}
     
-    <h1>Skin Search</h1>
-    
-    <input type="text" id="prompt" placeholder="Enter a username">
-    <button onclick="searchSkin()">Search</button>
+    <div class = "content">
 
-    <div id="viewer-box">
-        <div class = "loader skin-loading"></div>
-        <div class = "dark-overlay skin-loading""></div>
-        <canvas id="skin-container"></canvas>
+        <h1>Skin Search</h1>
+        
+        <input type="text" id="prompt" placeholder="Enter a username">
+        <button onclick="searchSkin()">Search</button>
+
+        <div id="viewer-box">
+            <div class = "loader skin-loading"></div>
+            <div class = "dark-overlay skin-loading""></div>
+            <canvas id="skin-container"></canvas>
+        </div>
+
+        <a id = "download" href = "https://mineskin.eu/skin/{{username}}.png" download><button>Download</button></a>
     </div>
-
-    <a id = "download" href = "https://mineskin.eu/skin/{{username}}.png" download><button>Download</button></a>
 
     <script>
         let skinViewer;

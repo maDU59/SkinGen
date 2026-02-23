@@ -1,23 +1,35 @@
-body { 
-  font-family: sans-serif; 
-  text-align: center; 
-  background: #1a1a1a; 
-  color: white; 
-  padding: 0;
-  margin: 0;
-}
-
 body, html{
   padding: 0;
   margin: 0;
 }
 
+body { 
+  font-family: sans-serif; 
+  text-align: center; 
+  background: #1a1a1a; 
+  color: white; 
+}
+
+.content {
+    padding: 0px 20px;
+}
+
 #viewer-box { 
   position: relative;
   margin: 20px auto; 
-  width: 400px; height: 500px; 
+  width: 400px;
+  aspect-ratio: 4 / 5;
   background: #222; 
-  border-radius: 10px; 
+  border-radius: 10px;
+  max-width: 100%;
+}
+
+#skin-container {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100% !important; 
+  height: 100% !important;
 }
 
 .loading { 
@@ -64,16 +76,6 @@ body, html{
   filter: hue-rotate(45deg);
   background-size: 8px 8px;
   animation-timing-function: linear
-}
-
-.header {
-  position: sticky;
-  top: 0;
-  padding: 0;
-  margin: 0;
-  height: 50px;
-  background: #222;
-  color: #f1f1f1;
 }
 
 #loading-text{

@@ -47,6 +47,13 @@ html, body{
     display:flex;
     align-items: center;
     text-align: center;
+    position: sticky;
+    top: 0;
+    padding: 0;
+    margin: 0;
+    height: 50px;
+    background: #222;
+    color: #ffffff;
 }
 
 .modal-overlay {
@@ -76,7 +83,6 @@ html, body{
     color: white;
 }
 
-/* Close Button */
 .close-btn {
     position: absolute;
     top: 15px;
@@ -88,9 +94,10 @@ html, body{
     cursor: pointer;
 }
 
-.close-btn:hover { color: white; }
+.close-btn:hover { 
+    color: white; 
+}
 
-/* Form Elements */
 .modal-content h2 { margin-top: 0; margin-bottom: 20px; }
 
 .modal-content input {

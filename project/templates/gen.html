@@ -11,20 +11,24 @@
 
     {% block content %}
 
-    <h1>AI Skin Generator</h1>
-    
-    <input type="text" id="prompt" placeholder="Describe your skin...">
-    <button id = "gen" onclick="generateSkin()">Generate</button>
+    <div class = "content">
 
-    <div id="viewer-box">
-        <div class = "loader skin-loading"></div>
-        <div class = "dark-overlay skin-loading">
-            <p id = "loading-text" class="skin-loading" class = ""></p>
+        <h1>AI Skin Generator</h1>
+        
+        <input type="text" id="prompt" placeholder="Describe your skin...">
+        <button id = "gen" onclick="generateSkin()">Generate</button>
+
+        <div id="viewer-box">
+            <div class = "loader skin-loading"></div>
+            <div class = "dark-overlay skin-loading">
+                <p id = "loading-text" class="skin-loading" class = ""></p>
+            </div>
+            <canvas id="skin-container"></canvas>
         </div>
-        <canvas id="skin-container"></canvas>
-    </div>
 
-    <a id = "download" href = "/static/placeholders/default_skin.png" download><button>Download</button></a>
+        <a id = "download" href = "/static/placeholders/default_skin.png" download><button>Download</button></a>
+
+    </div>
 
     <script>
 

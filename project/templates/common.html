@@ -20,10 +20,10 @@
         </a>
         {% if not current_user.is_authenticated %}
         <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button right" onclick="openModal('loginModal')">
-            <h1>Log in</h1>
+            <h2>Log in</h2>
         </button>
         {% else %}
-            <a href = "/settings" class = "full-button right">
+            <a href = "/profile" class = "full-button right">
                 <img class = "header-logo" src = "/static/images/account-logo.svg">
             </a>
         {% endif %}

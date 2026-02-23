@@ -1,80 +1,70 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Minecraft Skin Search</title>
+{% extends "common.html" %}
+
+{% block additional_scripts %}
     <script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.js"></script>
-    <link rel="stylesheet" href="/static/style/main.css" >
-</head>
-<body>
+{% endblock %}
 
-    {% extends "common.html" %}
+{% block content %}
 
-    {% block content %}
+    <h1>Skin Search</h1>
     
-    <div class = "content">
+    <input type="text" id="prompt" placeholder="Enter a username">
+    <button onclick="searchSkin()">Search</button>
 
-        <h1>Skin Search</h1>
-        
-        <input type="text" id="prompt" placeholder="Enter a username">
-        <button onclick="searchSkin()">Search</button>
-
-        <div id="viewer-box">
-            <div class = "loader skin-loading"></div>
-            <div class = "dark-overlay skin-loading""></div>
-            <canvas id="skin-container"></canvas>
-        </div>
-
-        <a id = "download" href = "https://mineskin.eu/skin/{{username}}.png" download><button>Download</button></a>
+    <div id="viewer-box">
+        <div class = "loader skin-loading"></div>
+        <div class = "dark-overlay skin-loading""></div>
+        <canvas id="skin-container"></canvas>
     </div>
 
-    <script>
-        let skinViewer;
+    <a id = "download" href = "https://mineskin.eu/skin/{{username}}.png" download><button>Download</button></a>
 
-        window.onload = async function() {
-            skinViewer = new skinview3d.SkinViewer({
-                canvas: document.getElementById("skin-container"),
-                width: 400,
-                height: 500,
-                skin: `https://mineskin.eu/skin/{{username}}`
-            });
-            setSkin(`https://mineskin.eu/skin/{{username}}`);
-            skinViewer.animation = new skinview3d.WalkingAnimation();
-            setLoading("none");
-        };
+<script>
+    let skinViewer;
 
-        async function searchSkin() {
-            const prompt = document.getElementById('prompt').value;
-            const loading = document.getElementsByClassName('skin-loading');
-            
-            setLoading("grid");
-            
-            setSkin(`https://mineskin.eu/skin/${prompt}`);
+    window.onload = async function() {
+        skinViewer = new skinview3d.SkinViewer({
+            canvas: document.getElementById("skin-container"),
+            width: 400,
+            height: 500,
+            skin: `https://mineskin.eu/skin/{{username}}`
+        });
+        setSkin(`https://mineskin.eu/skin/{{username}}`);
+        skinViewer.animation = new skinview3d.WalkingAnimation();
+        setLoading("none");
+    };
 
-            history.pushState("", "", "/search/" + prompt);
+    async function searchSkin() {
+        const prompt = document.getElementById('prompt').value;
+        const loading = document.getElementsByClassName('skin-loading');
+        
+        setLoading("grid");
+        
+        setSkin(`https://mineskin.eu/skin/${prompt}`);
 
-            setLoading("none");
+        history.pushState("", "", "/search/" + prompt);
+
+        setLoading("none");
+    }
+
+    async function setSkin(url) {
+        skinViewer.loadSkin(url);
+        fetch(url)
+        .then(response => response.blob())
+        .then(blob => {
+            const blobURL = URL.createObjectURL(blob);
+            const download = document.getElementById("download");
+            download.href = blobURL;
+            download.download = "skin.png"
+        });
+    }
+
+    function setLoading(state) {
+        const loading = document.getElementsByClassName('skin-loading');
+        for(let i = 0; i < loading.length; i++) {
+            loading[i].style.display = state;
         }
+    }
+</script>
 
-        async function setSkin(url) {
-            skinViewer.loadSkin(url);
-            fetch(url)
-            .then(response => response.blob())
-            .then(blob => {
-                const blobURL = URL.createObjectURL(blob);
-                const download = document.getElementById("download");
-                download.href = blobURL;
-                download.download = "skin.png"
-            });
-        }
-
-        function setLoading(state) {
-            const loading = document.getElementsByClassName('skin-loading');
-            for(let i = 0; i < loading.length; i++) {
-                loading[i].style.display = state;
-            }
-        }
-    </script>
-
-    {% endblock %}
-</body>
-</html>
+{% endblock %}

@@ -1,18 +1,6 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Minecraft Skin</title>
-    <link rel="stylesheet" href="/static/style/main.css" >
-</head>
-<body>
+{% extends "common.html" %}
 
-    {% extends "common.html" %}
-
-    {% block content %}
-    <div class = "content">
-        <h3 class="title">Profile</h3>
-        {{ tokens_remaining }} tokens remaining.
-    </div>
-    {% endblock %}
-</body>
-</html>
+{% block content %}
+    <h3 class="title">Profile</h3>
+    {{ tokens_remaining }} tokens remaining.
+{% endblock %}

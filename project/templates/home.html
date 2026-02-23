@@ -1,20 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Minecraft Skin</title>
-    <link rel="stylesheet" href="/static/style/main.css" >
-</head>
-<body>
+{% extends "common.html" %}
 
-    {% extends "common.html" %}
+{% block content %}
 
-    {% block content %}
-    
-    <h1>NeuroSkin</h1>
-    
-    <a href = "search">Search</a>
-    <a href = "gen">AI generation</a>
+<h1>NeuroSkin</h1>
 
-    {% endblock %}
-</body>
-</html>
+<a href = "search">Search</a>
+<a href = "gen">AI generation</a>
+
+{% endblock %}

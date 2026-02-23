@@ -23,7 +23,7 @@
             <h1>Log in</h1>
         </button>
         {% else %}
-            <a href = "/profile" class = "full-button right">
+            <a href = "/settings" class = "full-button right">
                 <img class = "header-logo" src = "/static/images/account-logo.svg">
             </a>
         {% endif %}
@@ -43,6 +43,7 @@
                 <input type="checkbox" name="remember" id="remember">
                 <button type="submit">Log In</button>
                 <p>Don't have an account? <a href="javascript:void(0)" onclick="openModal('signupModal'); closeModal('loginModal')">Sign up</a></p>
+                <p><a href="javascript:void(0)" onclick="openModal('passwordForgottenModal'); closeModal('loginModal')">Forgot password?</a></p>
             </form>
         </div>
     </div>
@@ -57,6 +58,19 @@
                 <input type="password" name="password" placeholder="Password" required>
                 <button type="submit">Sign Up</button>
                 <p>Already have an account? <a href="javascript:void(0)" onclick="openModal('loginModal'); closeModal('signupModal')">Log in</a></p>
+            </form>
+        </div>
+    </div>
+    <div id="passwordForgottenModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal('passwordForgottenModal')">&times;</button>
+            <h2>Password Reset</h2>
+            <form id="passwordForgottenForm">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+                <p>Enter your email address to reset your password.</p>
+                <input type="text" name="email" placeholder="Email address" required>
+                <button type="submit">Send Email</button>
+                <p id="passwordForgottenFeedbackMessage" class="feedback-message"></p>
             </form>
         </div>
     </div>
@@ -100,6 +114,35 @@
             } else {
                 const errorMsg = document.getElementById('signupErrorMessage');
                 errorMsg.textContent = result.msg;
+                errorMsg.style.display = 'block';
+            }
+        });
+
+        document.getElementById('passwordForgottenForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData(e.target);
+            
+            const response = await fetch('/password-reset-email', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (response.status === 404){
+                const errorMsg = document.getElementById('passwordForgottenFeedbackMessage');
+                errorMsg.textContent = "An error happened, please try again.";
+                errorMsg.style.display = 'block';
+            }
+
+            const result = await response.json();
+
+            if (result.status === "Success") {
+                const feedbackMsg = document.getElementById('passwordForgottenFeedbackMessage');
+                feedbackMsg.textContent = result.msg;
+                feedbackMsg.style.display = 'block';
+            } else {
+                const errorMsg = document.getElementById('passwordForgottenFeedbackMessage');
+                errorMsg.textContent = "An error happened, please try again.";
                 errorMsg.style.display = 'block';
             }
         });

@@ -111,15 +111,17 @@ body {
   padding: 30px;
   border-radius: 10px;
   text-align: left;
-  align-items: center
+  align-items: center;
+  flex-wrap:wrap;
+  justify-content: center;
 }
 
 .profile-info p{
   display: inline-block;
+  flex-grow: 1;
 }
 
 .small-button{
-  margin-left: auto;
   display: inline-block;
   background-color: transparent;
   border: 0;

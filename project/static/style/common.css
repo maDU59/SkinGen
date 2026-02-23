@@ -3,17 +3,17 @@
 }
 
 .header h1{
-    margin: 0;
+    margin: 0px 10px;
 }
 
 .header a{
+    padding: 0 10px;
     text-decoration: none;
     color: white;
 }
 
 .header .header-logo{
-    padding: 0px 10px;
-    height: 80%;
+    height: 60%;
     width: auto;
 }
 
@@ -65,7 +65,6 @@
     align-items: center;
 }
 
-/* The Modal Box */
 .modal-content {
     background: #1e1e1e;
     padding: 30px;
@@ -129,5 +128,10 @@
 
 .modal-content .error-message{
     color: orangered;
+    display: none;
+}
+
+.modal-content .feedback-message{
+    color: #ffffff;
     display: none;
 }

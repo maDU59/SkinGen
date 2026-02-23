@@ -52,6 +52,15 @@ def signup_post():
         "status": "Success"
     }), 200
 
+@auth.route('/password-reset-email', methods=['POST'])
+def password_reset_email():
+    email = request.form.get('email')
+    # TO-DO: Implement password reset email sending
+    return jsonify({
+        "status": "Success",
+        "msg": f"An email has been sent to {email} with instructions to reset your password."
+    }), 200
+
 @auth.route('/logout')
 @login_required
 def logout():

@@ -70,10 +70,10 @@ def is_in_queuue():
         "uuid": uuid
     })
 
-@main.route('/profile')
+@main.route('/settings')
 @login_required
 def profile():
-    return render_template('profile.html', tokens_remaining=current_user.tokens)
+    return render_template('account-settings.html', tokens_remaining=current_user.tokens)
 
 @main.route('/result/<ticket_id>')
 def get_result(ticket_id):

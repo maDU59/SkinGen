@@ -1,5 +1,9 @@
 {% extends "common.html" %}
 
+{% block additional_scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.js"></script>
+{% endblock %}
+
 {% block content %}
     <h1 class="title">Saved skins</h1>
     <div class="profile-info" id = "gallery">
@@ -30,10 +34,21 @@
                     const skinElement = document.createElement('div');
                     skinElement.classList.add('saved-skin');
                     skinElement.innerHTML = `
-                        <img src="${skin}" alt="Saved Skin" class="saved-skin-image">
-                        <p>${skin.split('/').pop().split('.')[0].split('_')[1]}</p>
+                        <div class="gallery-tile">
+                            <div id="viewer-box" class = "viewer-box">
+                            <canvas class = "skin-container"></canvas>
+                            </div>
+                            <p>${skin.split('/').pop().split('.')[0].split('_')[1]}</p>
+                        </div>
                     `;
                     profileInfoDiv.appendChild(skinElement);
+                    let skinViewer = new skinview3d.SkinViewer({
+                        canvas: document.getElementsByClassName("skin-container")[document.getElementsByClassName("skin-container").length - 1],
+                        width: 400,
+                        height: 500,
+                        skin: skin
+                    });
+                    skinViewer.controls.enableRotate = false;
                 });
             } else {
                 if (response.status === 200) {

@@ -11,10 +11,10 @@
     <input type="text" id="prompt" placeholder="Enter a username">
     <button onclick="searchSkin()">Search</button>
 
-    <div id="viewer-box">
+    <div id="viewer-box" class = "viewer-box">
         <div class = "loader skin-loading"></div>
         <div class = "dark-overlay skin-loading""></div>
-        <canvas id="skin-container"></canvas>
+        <canvas id="skin-container" class="skin-container"></canvas>
     </div>
 
     <a id = "download" href = "https://mineskin.eu/skin/{{username}}.png" download><button>Download</button></a>

@@ -11,12 +11,12 @@
     <input type="text" id="prompt" placeholder="Describe your skin...">
     <button id = "gen" onclick="generateSkin()">Generate</button>
 
-    <div id="viewer-box">
+    <div id="viewer-box" class = "viewer-box">
         <div class = "loader skin-loading"></div>
         <div class = "dark-overlay skin-loading">
             <p id = "loading-text" class="skin-loading" class = ""></p>
         </div>
-        <canvas id="skin-container"></canvas>
+        <canvas id="skin-container" class = "skin-container"></canvas>
     </div>
 
     <a id = "download" href = "/static/placeholders/default_skin.png" download><button>Download</button></a>

@@ -14,7 +14,7 @@ body {
     padding: 0px 20px;
 }
 
-#viewer-box { 
+.viewer-box { 
   position: relative;
   margin: 20px auto; 
   width: 400px;
@@ -24,7 +24,17 @@ body {
   max-width: 100%;
 }
 
-#skin-container {
+.gallery-tile .viewer-box { 
+  position: relative;
+  margin: 0px auto; 
+  width: 400px;
+  aspect-ratio: 4 / 5;
+  background-color: transparent;
+  border-radius: 10px;
+  max-width: 100%;
+}
+
+.skin-container {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
@@ -138,4 +148,23 @@ body {
 
 .red:hover{
   background-color: rgb(204, 0, 0)
+}
+
+#gallery{
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: left;
+}
+
+.gallery-tile{
+  width: 200px;
+  background-color: #444;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.gallery-tile img{
+  width: 100%;
+  border-radius: 5px 5px 0 0;
 }

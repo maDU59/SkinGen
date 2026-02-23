@@ -1,11 +1,12 @@
 from flask import request, render_template, jsonify, session, Blueprint
-from project.utils.skin_utils import get_output_local, get_skin_local
+from project.utils.skin_utils import get_output_local, get_skin_local, get_gallery_dir
 from flask_login import login_required, current_user
 import project.skin_gen as skin_gen
 import queue
 import uuid
 import threading
 import time
+import os
 
 main = Blueprint('main', __name__)
 
@@ -69,6 +70,16 @@ def is_in_queuue():
         "status": uuid in results,
         "uuid": uuid
     })
+
+@main.route('/saved-skins/<user_id>')
+@login_required
+def saved_skins(user_id):
+    if user_id != current_user.id:
+        return jsonify({"status": "error", "result": "Unauthorized"}), 403
+    if not os.path.exists(get_gallery_dir(user_id)):
+        return jsonify({"status": "Success", "skins": []}), 200
+    skins = os.listdir(get_gallery_dir(user_id))
+    return jsonify({"status": "Success", "skins": skins}), 200
 
 @main.route('/profile')
 @login_required

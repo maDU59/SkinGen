@@ -6,6 +6,7 @@ BASE_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 # Universal Paths
 MASKS_DIR = path.join(BASE_DIR, "masks")
 STATIC_DIR = path.join(BASE_DIR, "static")
+GALLERY_DIR = path.join(STATIC_DIR, "saved-skins")
 OUTPUT_DIR = path.join(STATIC_DIR, "output")
 PLACEHOLDER_DIR = path.join(STATIC_DIR, "placeholders")
 

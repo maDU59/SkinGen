@@ -1,5 +1,5 @@
 import os
-from project.utils.path_utils import PLACEHOLDER_DIR, OUTPUT_DIR
+from project.utils.path_utils import PLACEHOLDER_DIR, OUTPUT_DIR, GALLERY_DIR
 
 def get_skin(uuid = None, additional = "", hasToExist = True):
     skin = get_output(uuid, additional)
@@ -31,3 +31,6 @@ def get_output_local(uuid = None, additional = ""):
 def get_default_output_local(additional = ""):
     if additional != "": additional = "_" + additional
     return f"static/placeholders/default_skin{additional}.png"
+
+def get_gallery_dir(uuid = None):
+    return GALLERY_DIR + f"/{uuid}/gallery/"

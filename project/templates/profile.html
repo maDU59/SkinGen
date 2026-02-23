@@ -1,6 +1,10 @@
 {% extends "common.html" %}
 
 {% block content %}
+    <h1 class="title">Saved skins</h1>
+    <div class="profile-info" id = "gallery">
+
+    </div>
     <h1 class="title">Account settings</h1>
     <div class="profile-info">
         <p><strong>Email:</strong> {{ current_user.email }}</p>
@@ -9,4 +13,31 @@
     <div class="profile-info">
         <p><strong>Tokens Remaining:</strong> {{ tokens_remaining }}</p>
     </div>
+
+    <script>
+        window.onload = function() {
+            fetchSavedSkins();
+        }
+
+        // Example of fetching and displaying saved skins
+        async function fetchSavedSkins() {
+            const response = await fetch('/saved-skins/{{ current_user.id }}');
+            const data = await response.json();
+            const profileInfoDiv = document.getElementById('gallery');
+
+            if (data.skins && data.skins.length > 0) {
+                data.skins.forEach(skin => {
+                    const skinElement = document.createElement('div');
+                    skinElement.classList.add('saved-skin');
+                    skinElement.innerHTML = `
+                        <img src="${skin.url}" alt="Saved Skin" class="saved-skin-image">
+                        <p>${skin.name}</p>
+                    `;
+                    profileInfoDiv.appendChild(skinElement);
+                });
+            } else {
+                profileInfoDiv.innerHTML += '<p>You have no saved skins.</p>';
+            }
+        }
+    </script>
 {% endblock %}

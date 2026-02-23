@@ -24,10 +24,6 @@ def login_post():
         "status": "Success"
     }), 200
 
-@auth.route('/signup')
-def signup():
-    return render_template('signup.html')
-
 @auth.route('/signup', methods=['POST'])
 def signup_post():
     email = request.form.get('email')
@@ -37,13 +33,24 @@ def signup_post():
 
     if user:
         flash('Email address already exists')
-        return redirect(url_for('auth.signup'))
+        return jsonify({
+            "status": "Incorrect",
+            "msg": "Email address already exists"
+        }), 200
+    
+    if password is None or len(password) < 8:
+        return jsonify({
+            "status": "Incorrect",
+            "msg": "Password must be at least 8 characters long"
+        }), 200
 
     new_user = User(email=email, password=generate_password_hash(password), tokens=2)
     db.session.add(new_user)
     db.session.commit()
 
-    return redirect(url_for('auth.login'))
+    return jsonify({
+        "status": "Success"
+    }), 200
 
 @auth.route('/logout')
 @login_required

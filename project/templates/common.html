@@ -14,38 +14,53 @@
         <h1>NeuroSkin</h1>
     </a>
     {% if not current_user.is_authenticated %}
-    <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button login-button" onclick="openModal()">
+    <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button login-button" onclick="openModal('loginModal')">
         <h1>Log in</h1>
     </button>
     {% endif %}
 </div>
 <div id="loginModal" class="modal-overlay">
     <div class="modal-content">
-        <button class="close-btn" onclick="closeModal()">&times;</button>
+        <button class="close-btn" onclick="closeModal('loginModal')">&times;</button>
         <h2>Login</h2>
         <form id="loginForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <p id="loginErrorMessage" class="error-message"></p>
             <input type="text" name="email" placeholder="Email address" required>
             <input type="password" name="password" placeholder="Password" required>
-                <label class="checkbox" for="remember">
-                    Remember me
-                </label>
-                <input type="checkbox" name="remember" id="remember">
+            <label class="checkbox" for="remember">
+                Remember me
+            </label>
+            <input type="checkbox" name="remember" id="remember">
             <button type="submit">Log In</button>
-            <p id="errorMessage" class="error-message" style="display:none;"></p>
-            <p>Don't have an account? <a href="/signup">Sign up</a></p>
+            <p>Don't have an account? <a href="javascript:void(0)" onclick="openModal('signupModal'); closeModal('loginModal')">Sign up</a></p>
+        </form>
+    </div>
+</div>
+<div id="signupModal" class="modal-overlay">
+    <div class="modal-content">
+        <button class="close-btn" onclick="closeModal('signupModal')">&times;</button>
+        <h2>Sign Up</h2>
+        <form id="signupForm">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            <p id="signupErrorMessage" class="error-message"></p>
+            <input type="text" name="email" placeholder="Email address" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Sign Up</button>
+            <p>Already have an account? <a href="javascript:void(0)" onclick="openModal('loginModal'); closeModal('signupModal')">Log in</a></p>
         </form>
     </div>
 </div>
 <script>
 
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault(); // Stop the page from reloading
+        e.preventDefault();
 
         const formData = new FormData(e.target);
         
         const response = await fetch('/login', {
             method: 'POST',
-            body: formData // Flask will find this in request.form
+            body: formData
         });
 
         const result = await response.json();
@@ -53,18 +68,39 @@
         if (result.status === "Success") {
             location.reload();
         } else {
-            const errorMsg = document.getElementById('errorMessage');
+            const errorMsg = document.getElementById('loginErrorMessage');
             errorMsg.textContent = "Invalid email or password.";
             errorMsg.style.display = 'block';
         }
     });
 
-    function openModal() {
-        document.getElementById('loginModal').style.display = 'flex';
+    document.getElementById('signupForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData(e.target);
+        
+        const response = await fetch('/signup', {
+            method: 'POST',
+            body: formData
+        });
+
+        const result = await response.json();
+
+        if (result.status === "Success") {
+            location.reload();
+        } else {
+            const errorMsg = document.getElementById('signupErrorMessage');
+            errorMsg.textContent = result.msg;
+            errorMsg.style.display = 'block';
+        }
+    });
+
+    function openModal(id) {
+        document.getElementById(id).style.display = 'flex';
     }
 
-    function closeModal() {
-        document.getElementById('loginModal').style.display = 'none';
+    function closeModal(id) {
+        document.getElementById(id).style.display = 'none';
     }
 </script>
 

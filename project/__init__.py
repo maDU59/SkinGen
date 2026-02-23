@@ -1,8 +1,11 @@
 from flask import Flask, session
+from flask_wtf.csrf import CSRFProtect
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from dotenv import load_dotenv
 from datetime import timedelta
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import os
 
 # Initialize SQLAlchemy instance (outside create_app for import access)
@@ -10,6 +13,15 @@ db = SQLAlchemy()
 
 def create_app():
     app = Flask(__name__)
+    csrf = CSRFProtect()
+    csrf.init_app(app)
+
+    limiter = Limiter(
+        get_remote_address,
+        app=app,
+        default_limits=[],
+        storage_uri="memory://",
+    )
 
     load_dotenv()
     app.secret_key = os.getenv("SESSION_KEY")
@@ -41,9 +53,11 @@ def create_app():
     
     # Register blueprints
     from .auth import auth as auth_blueprint
+    limiter.limit("15/hour")(auth_blueprint)
     app.register_blueprint(auth_blueprint)
     
     from .main import main as main_blueprint
+    limiter.limit("60/minute")(main_blueprint)
     app.register_blueprint(main_blueprint)
     
     return app

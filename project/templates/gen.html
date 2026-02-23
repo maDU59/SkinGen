@@ -27,6 +27,9 @@
     <a id = "download" href = "/static/placeholders/default_skin.png" download><button>Download</button></a>
 
     <script>
+
+        var csrf_token = "{{ csrf_token() }}";
+
         let skinViewer;
         var interval;
         var ticketId;
@@ -51,10 +54,7 @@
             }
 
             try {
-                const response = await fetch('/get-skin', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' }
-                });
+                const response = await fetch('/get-skin');
                 
                 const data = await response.json();
 
@@ -76,7 +76,10 @@
             if (!getLoading()){
                 const response = await fetch('/generate', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrf_token
+                    },
                     body: JSON.stringify({ prompt: prompt })
                 });
 

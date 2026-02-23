@@ -124,3 +124,8 @@ html, body{
 }
 
 .modal-content button[type="submit"]:hover { background: #0056b3; }
+
+.modal-content .error-message{
+    color: orangered;
+    display: none;
+}

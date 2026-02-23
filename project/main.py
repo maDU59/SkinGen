@@ -54,7 +54,7 @@ def generate():
         "result": uuid
     }), 202
 
-@main.route('/get-skin', methods=['POST'])
+@main.route('/get-skin')
 def get_skin_serv():
     skin = get_skin_local(get_uuid())
     return jsonify({
@@ -73,7 +73,7 @@ def is_in_queuue():
 @main.route('/profile')
 @login_required
 def profile():
-    return render_template('profile.html')
+    return render_template('profile.html', tokens_remaining=current_user.tokens)
 
 @main.route('/result/<ticket_id>')
 def get_result(ticket_id):

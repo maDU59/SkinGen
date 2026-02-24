@@ -147,8 +147,21 @@
             }
         });
 
-        function openModal(id) {
-            document.getElementById(id).style.display = 'flex';
+        function openModal(id, data = null) {
+            const modal = document.getElementById(id);
+            if (data !== null) {
+                const dataElement = modal.querySelector('.data');
+                if (dataElement) {
+                    dataElement.textContent = data;
+                }
+            }
+            else{
+                const dataElement = modal.querySelector('.data');
+                if (dataElement) {
+                    dataElement.textContent = data;
+                }
+            }
+            modal.style.display = 'flex';
         }
 
         function closeModal(id) {

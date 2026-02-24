@@ -112,7 +112,7 @@
     margin-bottom: 15px;
 }
 
-.modal-content button[type="submit"] {
+.modal-content button[type="submit"], .modal-content button.submit{
     width: 100%;
     padding: 12px;
     border: none;

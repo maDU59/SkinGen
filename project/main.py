@@ -1,6 +1,7 @@
 from flask import request, render_template, jsonify, session, Blueprint
 from project.utils.skin_utils import get_output_local, get_skin_local, get_gallery_dir, get_gallery_dir_local
 from flask_login import login_required, current_user
+from project.utils.path_utils import BASE_DIR
 import project.skin_gen as skin_gen
 import queue
 import uuid
@@ -92,6 +93,21 @@ def saved_skins(user_id):
 @login_required
 def profile():
     return render_template('profile.html', tokens_remaining=current_user.tokens)
+
+@main.route('/delete-skin', methods=['POST'])
+@login_required
+def delete_skin():
+    path = request.json.get('skin')
+    if current_user.is_authenticated and str(current_user.id) == path.split("/")[-2]:
+        full_path = os.path.join(BASE_DIR, path)
+        print(full_path)
+        if os.path.exists(full_path):
+            os.remove(full_path)
+            return jsonify({"status": "Success"}), 200
+        else:
+            return jsonify({"status": "Error", "result": "Skin not found"}), 404
+    else:
+        return jsonify({"status": "Error", "result": "Unauthorized"}), 403
 
 @main.route('/result/<ticket_id>')
 def get_result(ticket_id):

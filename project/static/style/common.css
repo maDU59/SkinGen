@@ -115,7 +115,6 @@
 .modal-content button[type="submit"] {
     width: 100%;
     padding: 12px;
-    background: #007bff;
     border: none;
     border-radius: 6px;
     color: white;
@@ -123,8 +122,6 @@
     cursor: pointer;
     transition: background 0.3s;
 }
-
-.modal-content button[type="submit"]:hover { background: #0056b3; }
 
 .modal-content .error-message{
     color: orangered;

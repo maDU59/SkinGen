@@ -23,6 +23,9 @@
     let skinViewer;
 
     window.onload = async function() {
+        searchInput = document.getElementById('prompt').onchange = function() {
+            searchSkin();
+        };
         skinViewer = new skinview3d.SkinViewer({
             canvas: document.getElementById("skin-container"),
             width: 400,

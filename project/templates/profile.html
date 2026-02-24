@@ -39,6 +39,9 @@
                             <canvas class = "skin-container"></canvas>
                             </div>
                             <p>${skin.split('/').pop().split('.')[0].split('_')[1]}</p>
+                            <div class = "button-container">
+                                <a id = "download" href = "${skin}" download = "skin.png"><button class="round-button blue"><img src="/static/images/download-icon.svg" alt="Download"></button></a>
+                                <button class="round-button red" onclick="deleteSkin('${skin}')"><img src="/static/images/delete-icon.svg" alt="Delete"></button>
                         </div>
                     `;
                     profileInfoDiv.appendChild(skinElement);
@@ -49,6 +52,7 @@
                         skin: skin
                     });
                     skinViewer.controls.enableRotate = false;
+                    skinViewer.controls.enableZoom = false;
                 });
             } else {
                 if (response.status === 200) {

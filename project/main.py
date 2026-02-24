@@ -85,8 +85,7 @@ def saved_skins(user_id):
         return jsonify({"status": "error", "result": "Unauthorized"}), 403
     if not os.path.exists(get_gallery_dir(user_id)):
         return jsonify({"status": "Success", "skins": []}), 200
-    skins = [get_gallery_dir_local(user_id) + skin for skin in os.listdir(get_gallery_dir(user_id))]
-    print(skins)
+    skins = [get_gallery_dir_local(user_id) + skin for skin in os.listdir(get_gallery_dir(user_id))[::-1]]
     return jsonify({"status": "Success", "skins": skins}), 200
 
 @main.route('/profile')

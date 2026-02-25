@@ -24,7 +24,7 @@
             <button class="close-btn" onclick="closeModal('deleteModal')">&times;</button>
             <h2>Deletion confirmation</h2>
             <p>Deleting this skin will remove it from your account forever.</p>
-            <button type="button" class = "blue submit" onclick="confirmDelete()">Confirm Deletion</button>
+            <button type="button" class = "submit" onclick="confirmDelete()">Confirm Deletion</button>
         </div>
     </div>
 
@@ -53,8 +53,8 @@
                             </div>
                             <p>${skin.split('/').pop().split('.')[0].split('_')[1]}</p>
                             <div class = "button-container">
-                                <a id = "download" href = "${skin}" download = "skin.png"><button class="round-button blue"><img src="/static/images/download-icon.svg" alt="Download"></button></a>
-                                <a id = "edit" href = "/edit/${skin}"><button class="round-button blue"><img src="/static/images/edit-icon.svg" alt="Edit"></button></a>
+                                <a id = "download" href = "${skin}" download = "skin.png"><button class="round-button secondary-color"><img src="/static/images/download-icon.svg" alt="Download"></button></a>
+                                <a id = "edit" href = "/edit/${skin}"><button class="round-button secondary-color"><img src="/static/images/edit-icon.svg" alt="Edit"></button></a>
                                 <button class="round-button red" onclick="openModal('deleteModal', '${skin}')"><img src="/static/images/delete-icon.svg" alt="Delete"></button>
                         </div>
                     `;

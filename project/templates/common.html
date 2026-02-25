@@ -5,7 +5,6 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/static/style/common.css" >
     <link rel="stylesheet" href="/static/style/main.css" >
     <meta name="color-scheme" content="light dark">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,8 +14,8 @@
 <body>
     <div class="header" id="myHeader">
         <a href = "/" class = "full-button home-button">
-            <img class = "header-logo" src = "/static/images/logo.svg">
-            <h1>NeuroSkin</h1>
+            <img class = "header-logo r-margin-10" src = "/static/images/logo.svg">
+            <h1>Neuro</h1><h1 class = "secondary-color-text">Skin</h1>
         </a>
         {% if not current_user.is_authenticated %}
         <button type="button" data-bs-toggle="modal" data-bs-target="#loginModal" class = "full-button right" onclick="openModal('loginModal')">
@@ -41,7 +40,7 @@
                     Remember me
                 </label>
                 <input type="checkbox" name="remember" id="remember">
-                <button type="submit" class = "blue">Log In</button>
+                <button type="submit">Log In</button>
                 <p>Don't have an account? <a href="javascript:void(0)" onclick="openModal('signupModal'); closeModal('loginModal')">Sign up</a></p>
                 <p><a href="javascript:void(0)" onclick="openModal('passwordForgottenModal'); closeModal('loginModal')">Forgot password?</a></p>
             </form>
@@ -56,7 +55,7 @@
                 <p id="signupErrorMessage" class="error-message"></p>
                 <input type="text" name="email" placeholder="Email address" required>
                 <input type="password" name="password" placeholder="Password" required>
-                <button type="submit" class = "blue">Sign Up</button>
+                <button type="submit">Sign Up</button>
                 <p>Already have an account? <a href="javascript:void(0)" onclick="openModal('loginModal'); closeModal('signupModal')">Log in</a></p>
             </form>
         </div>
@@ -69,7 +68,7 @@
                 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                 <p>Enter your email address to reset your password.</p>
                 <input type="text" name="email" placeholder="Email address" required>
-                <button type="submit" class = "blue">Send Email</button>
+                <button type="submit">Send Email</button>
                 <p id="passwordForgottenFeedbackMessage" class="feedback-message"></p>
             </form>
         </div>

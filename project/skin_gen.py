@@ -4,9 +4,7 @@ from project.utils.path_utils import MASK_FILE
 from PIL import Image
 import torch
 import time
-import minepi
 import numpy as np
-import asyncio
 import os
 
 CACHE_DIR = "E:/AI-models/Minecraft-Skins"
@@ -88,16 +86,3 @@ def generate_skin(prompt, uuid = None, id = None):
 
         file_path = os.path.join(directory, f"{int(time.time())}_" + prompt + ".png")
         minecraft_skin.save(file_path)
-
-async def render_skin(texture):
-    s = minepi.Skin(texture)
-    await s.render_skin()
-    s.skin.show()
-
-if __name__ == "__main__":
-    #generate_skin("A purple smiling dinosaur")
-    image = Image.open(get_skin(additional="full")[1])
-    minecraft_skin = extract_minecraft_skin(image)
-    minecraft_skin = restore_skin_alphachannels(minecraft_skin)
-    minecraft_skin.save(get_skin()[1])
-    asyncio.run(render_skin(minecraft_skin))

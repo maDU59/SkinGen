@@ -1,7 +1,7 @@
 {% extends "common.html" %}
 
 {% block additional_scripts %}
-    <script src="https://cdn.jsdelivr.net/npm/skinview3d@3.4.1/bundles/skinview3d.bundle.js"></script>
+    <script src="/static/js/skinview3d/bundles/skinview3d.bundle.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -63,10 +63,13 @@
                         canvas: document.getElementsByClassName("skin-container")[document.getElementsByClassName("skin-container").length - 1],
                         width: 400,
                         height: 500,
-                        skin: skin
                     });
                     skinViewer.controls.enableRotate = false;
                     skinViewer.controls.enableZoom = false;
+                    skinViewer.renderPaused = true;
+                    skinViewer.loadSkin(skin).then(() => {
+                        skinViewer.render(); 
+                    });
                 });
             } else {
                 if (response.status === 200) {

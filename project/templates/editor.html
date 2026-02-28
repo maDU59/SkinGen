@@ -1,0 +1,67 @@
+{% extends "common.html" %}
+
+{% block additional_scripts %}
+    <script src="/static/js/skinview3d/bundles/skinview3d.bundle.js"></script>
+    <script src="/static/js/textureconverter.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class = "editor">
+    <div class = "left-panel">
+        <div id="viewer-box" class = "viewer-box">
+            <canvas id = "skin-container" class = "skin-container"></canvas>
+            <img id = "textureViewer" class = "nearest" src = "" hidden>
+            <button id = "viewToggle"class="toggle" onclick="toggleView()"><div class="toggle-icon skin secondary-color"></div><div class="toggle-icon texture"></div></button>
+        </div>
+    </div>
+    <div class = "right-panel">
+        <div class= "panel">
+
+        </div>
+    </div>
+</div>
+<script>
+    let skinViewer;
+    var interval;
+    var ticketId;
+
+    window.onload = async function() {
+        const skinCanvas = document.getElementById("skin-container");
+        if (!skinCanvas) {
+            console.error("Could not find element with id 'skin-container'");
+            return;
+        }
+        skinViewer = new skinview3d.SkinViewer({
+            canvas: document.getElementById("skin-container"),
+            width: 400,
+            height: 500,
+        });
+        
+        const textureViewer = document.getElementById("textureViewer");
+        convertTexture("{{skin_url}}").then(newImg => {
+            textureViewer.src = newImg.src;
+            skinViewer.loadSkin(newImg);
+            skinViewer.animation = new skinview3d.WalkingAnimation();
+        });
+    }
+
+    function toggleView() {
+        const skinCanvas = document.getElementById("skin-container");
+        const textureViewer = document.getElementById("textureViewer");
+        const toggleButton = document.getElementById("viewToggle");
+        if (skinCanvas.hidden) {
+            skinCanvas.hidden = false;
+            textureViewer.hidden = true;
+            toggleButton.querySelector(".skin").classList.add("secondary-color")
+            toggleButton.querySelector(".texture").classList.remove("secondary-color")
+        }
+        else{
+            skinCanvas.hidden = true;
+            textureViewer.hidden = false;
+            toggleButton.querySelector(".texture").classList.add("secondary-color")
+            toggleButton.querySelector(".skin").classList.remove("secondary-color")
+        }
+    }
+</script>
+
+{% endblock %}

@@ -63,7 +63,7 @@ def generate():
         "id": id
     }), 202
 
-@main.route('/get-skin')
+@main.route('/get-skin', methods=['GET'])
 def get_skin_serv():
     skin = get_skin_local(get_uuid())
     return jsonify({
@@ -71,7 +71,7 @@ def get_skin_serv():
         "skin": skin[1]
     })
 
-@main.route('/check-queue')
+@main.route('/check-queue', methods=['GET'])
 def is_in_queuue():
     uuid = get_uuid()
     return jsonify({
@@ -79,7 +79,14 @@ def is_in_queuue():
         "uuid": uuid
     })
 
-@main.route('/saved-skins/<user_id>')
+@main.route('/editor', methods=['GET'])
+@main.route('/editor/<path:skin_url>', methods=['GET'])
+def editor(skin_url = "/static/skins/default.png"):
+    if not skin_url.startswith('/') and not skin_url.startswith('http'):
+        skin_url = '/' + skin_url
+    return render_template('editor.html', skin_url = skin_url)
+
+@main.route('/saved-skins/<user_id>', methods=['GET'])
 @login_required
 def saved_skins(user_id):
     if user_id != str(current_user.id):
@@ -89,7 +96,7 @@ def saved_skins(user_id):
     skins = [get_gallery_dir_local(user_id) + skin for skin in os.listdir(get_gallery_dir(user_id))[::-1]]
     return jsonify({"status": "Success", "skins": skins}), 200
 
-@main.route('/profile')
+@main.route('/profile', methods=['GET'])
 @login_required
 def profile():
     return render_template('profile.html', tokens_remaining=current_user.tokens)
@@ -109,7 +116,7 @@ def delete_skin():
     else:
         return jsonify({"status": "Error", "result": "Unauthorized"}), 403
 
-@main.route('/result/<ticket_id>')
+@main.route('/result/<ticket_id>', methods=['GET'])
 def get_result(ticket_id):
 
     if ticket_id != session.get("uuid"):

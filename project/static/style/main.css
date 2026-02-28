@@ -62,8 +62,9 @@ body {
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: 100% !important; 
   height: 100% !important;
+  width: auto !important;
+  aspect-ratio: 4/5 !important;
 }
 
 .skin-loading{
@@ -381,4 +382,83 @@ button.secondary-color:hover, a.secondary-color:hover{
 
 .no-r-padding{
   padding-right: 0;
+}
+
+.nearest{
+  image-rendering: pixelated;
+}
+
+.editor{
+  display: flex;
+  width: 100%;
+  height: calc(100vh - 50px);
+  gap: 20px;
+}
+
+.right-panel{
+  flex-grow: 1;
+  height: 100%;
+}
+
+.left-panel{
+  height: 100%;
+}
+
+.viewer-box img{
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  margin: 20px;
+}
+
+.panel{
+  background-color: var(--tertiary-color);
+  margin: 20px auto;
+  padding: 30px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  height: calc(100vh - 90px)
+}
+
+.editor .viewer-box { 
+  position: relative;
+  margin: 20px auto;
+  height: calc(100vh - 170px);
+  width: auto;
+  aspect-ratio: 1/1;
+  background: var(--tertiary-color); 
+  border-radius: 20px;
+}
+
+.editor .viewer-box .toggle{
+  position: absolute;
+  display: flex;
+  top: 20px;
+  left: 20px;
+  z-index: 5;
+  width: 60px;
+  padding: 0;
+  aspect-ratio: 3/2;
+  border-radius: 15px;
+  background-color: var(--primary-color);
+  border: 0;
+  overflow: hidden;
+}
+
+.editor .viewer-box .toggle div{
+  width:50%;
+  height: 100%;
+}
+
+@media (max-width: 1200px){
+  .editor{
+    display: block;
+  }
+
+  .right-panel{
+    width: 100%;
+  }
+
+  .left-panel{
+    width: 100%;
+  }
 }

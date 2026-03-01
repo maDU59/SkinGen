@@ -58,6 +58,10 @@ body {
   max-width: 100%;
 }
 
+.gallery-tile .viewer-box .skin-container { 
+  touch-action:auto !important;
+}
+
 .skin-container {
   position: absolute;
   top: 50%; 
@@ -404,18 +408,26 @@ button.secondary-color:hover, a.secondary-color:hover{
 
 .editor{
   display: flex;
+  flex-direction: row;
   width: 100%;
-  height: calc(100vh - 50px);
   gap: 20px;
+  margin: 20px auto;
 }
 
 .right-panel{
   flex-grow: 1;
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  height: calc(100vh - 90px);
 }
 
 .left-panel{
-  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: calc(100vh - 90px);
 }
 
 .texture-container{
@@ -445,11 +457,12 @@ button.secondary-color:hover, a.secondary-color:hover{
 
 .panel{
   background-color: var(--tertiary-color);
-  margin: 20px auto;
+  margin: 0 auto;
   padding: 30px;
   box-sizing: border-box;
   border-radius: 20px;
-  height: calc(100vh - 90px)
+  width: 100%;
+  flex-grow: 1;
 }
 
 .stop-scrolling{
@@ -459,7 +472,7 @@ button.secondary-color:hover, a.secondary-color:hover{
 
 .editor .viewer-box { 
   position: relative;
-  margin: 20px auto;
+  margin: 0px auto;
   height: calc(100vh - 170px);
   width: auto;
   background: var(--tertiary-color); 
@@ -490,9 +503,10 @@ button.secondary-color:hover, a.secondary-color:hover{
   align-items: center;
 }
 
-@media (max-width: 1200px){
+@media (max-width: 1000px){
   .editor{
-    display: block;
+    display: flex;
+    flex-direction: column;
   }
 
   .right-panel{

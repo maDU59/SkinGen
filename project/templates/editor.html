@@ -15,6 +15,9 @@
             </div>
             <button id = "view-toggle"class="toggle" onclick="toggleView()"><div class="toggle-icon skin secondary-color"><img src = "/static/images/skin-icon.svg" class = "icon"></div><div class="toggle-icon texture"><img src = "/static/images/texture-icon.svg" class = "icon"></div></button>
         </div>
+        <div class= "panel">
+
+        </div>
     </div>
     <div class = "right-panel">
         <div class= "panel">
@@ -143,6 +146,7 @@
 
     function updateTransform() {
         let img = document.querySelector(".texture-container img");
+        currentZoom = Math.max(minZoom, Math.min(maxZoom, currentZoom));
         maxX = (img.width * currentZoom - img.width) / (2 * currentZoom);
         maxY = (img.height * currentZoom - img.height) / (2 * currentZoom);
         translateX = Math.min(Math.max(translateX, -maxX), maxX);

@@ -10,8 +10,10 @@
     <div class = "left-panel">
         <div id="viewer-box" class = "viewer-box">
             <canvas id = "skin-container" class = "skin-container"></canvas>
-            <img id = "textureViewer" class = "nearest" src = "" hidden>
-            <button id = "viewToggle"class="toggle" onclick="toggleView()"><div class="toggle-icon skin secondary-color"></div><div class="toggle-icon texture"></div></button>
+            <div id="texture-container" class = "texture-container hidden">
+                <img id = "texture-viewer" class = "nearest background" draggable="false" src = "">
+            </div>
+            <button id = "view-toggle"class="toggle" onclick="toggleView()"><div class="toggle-icon skin secondary-color"><img src = "/static/images/skin-icon.svg" class = "icon"></div><div class="toggle-icon texture"><img src = "/static/images/texture-icon.svg" class = "icon"></div></button>
         </div>
     </div>
     <div class = "right-panel">
@@ -25,19 +27,79 @@
     var interval;
     var ticketId;
 
+    let currentZoom = 1;
+    let minZoom = 1;
+    let maxZoom = 4;
+    let stepSize = 0.1;
+
+    let translateX = 0;
+    let translateY = 0;
+    let isDragging = false;
+    let startX, startY, oX, oY;
+
     window.onload = async function() {
-        const skinCanvas = document.getElementById("skin-container");
-        if (!skinCanvas) {
-            console.error("Could not find element with id 'skin-container'");
-            return;
-        }
+        let container = document.getElementById("texture-container");
+
+        container.addEventListener("wheel", function(event) {
+            event.preventDefault();
+            let direction = event.deltaY > 0 ? -1 : 1;
+            zoomImage(direction);
+        }, { passive: false });
+
+        container.addEventListener("touchmove", (e) => {
+            if (e.touches.length === 2) {
+                isDragging = false;
+                const dist = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+
+                if (initialPinchDistance === null) {
+                    initialPinchDistance = dist;
+                } else {
+                    let delta = dist / initialPinchDistance;
+                    currentZoom *= delta;
+                    initialPinchDistance = dist;
+                    updateTransform();
+                }
+            }
+        }, { passive: false });
+
+        container.addEventListener("touchend", () => {
+            initialPinchDistance = null;
+        });
+
+        container.addEventListener("pointerdown", (e) => {
+            if (e.pointerType === 'touch' && e.isPrimary === false) return; 
+            
+            isDragging = true;
+            container.setPointerCapture(e.pointerId);
+            startX = e.clientX;
+            startY = e.clientY;
+            oX = translateX;
+            oY = translateY;
+        });
+
+        container.addEventListener("pointermove", (e) => {
+            if (isDragging) {
+                translateX = oX + (e.clientX - startX) / currentZoom;
+                translateY = oY + (e.clientY - startY) / currentZoom;
+                updateTransform();
+            }
+        });
+
+        container.addEventListener("pointerup", (e) => {
+            isDragging = false;
+            container.releasePointerCapture(e.pointerId);
+        });
+
         skinViewer = new skinview3d.SkinViewer({
             canvas: document.getElementById("skin-container"),
             width: 400,
             height: 500,
         });
         
-        const textureViewer = document.getElementById("textureViewer");
+        const textureViewer = document.getElementById("texture-viewer");
         convertTexture("{{skin_url}}").then(newImg => {
             textureViewer.src = newImg.src;
             skinViewer.loadSkin(newImg);
@@ -47,20 +109,45 @@
 
     function toggleView() {
         const skinCanvas = document.getElementById("skin-container");
-        const textureViewer = document.getElementById("textureViewer");
-        const toggleButton = document.getElementById("viewToggle");
-        if (skinCanvas.hidden) {
-            skinCanvas.hidden = false;
-            textureViewer.hidden = true;
+        const textureViewer = document.getElementById("texture-container");
+        const toggleButton = document.getElementById("view-toggle");
+        if (skinCanvas.classList.contains("hidden")) {
+            skinCanvas.classList.remove("hidden");
+            textureViewer.classList.add("hidden");
+            skinViewer.renderPaused = false;
             toggleButton.querySelector(".skin").classList.add("secondary-color")
             toggleButton.querySelector(".texture").classList.remove("secondary-color")
         }
         else{
-            skinCanvas.hidden = true;
-            textureViewer.hidden = false;
+            skinCanvas.classList.add("hidden");
+            textureViewer.classList.remove("hidden");
+            skinViewer.renderPaused = true;
             toggleButton.querySelector(".texture").classList.add("secondary-color")
             toggleButton.querySelector(".skin").classList.remove("secondary-color")
         }
+    }
+
+    function zoomImage(direction)
+    {
+        let newZoom = currentZoom + direction * stepSize;
+
+        if (newZoom < minZoom || newZoom > maxZoom) {
+            return;
+        }
+
+        currentZoom = newZoom;
+
+        let image = document.querySelector(".texture-container img");
+        updateTransform();
+    }
+
+    function updateTransform() {
+        let img = document.querySelector(".texture-container img");
+        maxX = (img.width * currentZoom - img.width) / (2 * currentZoom);
+        maxY = (img.height * currentZoom - img.height) / (2 * currentZoom);
+        translateX = Math.min(Math.max(translateX, -maxX), maxX);
+        translateY = Math.min(Math.max(translateY, -maxY), maxY);
+        img.style.transform = `translate(${translateX * currentZoom}px, ${translateY * currentZoom}px) scale(${currentZoom})`;
     }
 </script>
 
